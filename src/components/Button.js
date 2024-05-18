@@ -1,9 +1,38 @@
-// src/components/Button.js
 import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import Icon from "./Icon";
 
+/**
+ * Button component that renders a button with optional icon, variant, and size.
+ * 
+ * @component
+ * @param {Object} props - The props object.
+ * @param {React.ReactNode} props.children - The content of the button.
+ * @param {function} [props.onClick] - The click handler function.
+ * @param {string} [props.variant] - The variant of the button. Can be "primary", "secondary", "destructive", or "link".
+ * @param {string} [props.size] - The size of the button. Can be "default" or "small".
+ * @param {string} [props.icon] - The name of the icon to render.
+ * @param {string} [props.iconPosition] - The position of the icon. Can be "start" or "end".
+ * @returns {JSX.Element} The rendered button component.
+ * 
+ * @example
+ * // Example usage:
+ * import Button from './components/Button';
+ * 
+ * function App() {
+ *   return (
+ *     <div>
+ *       <Button onClick={() => alert('Clicked!')} variant="primary" size="default" icon="Add" iconPosition="start">
+ *         Default
+ *       </Button>
+ *       <Button onClick={() => alert('Clicked!')} variant="secondary" size="small" icon="Add" iconPosition="end">
+ *         Small
+ *       </Button>
+ *     </div>
+ *   );
+ * }
+ */
 const Button = ({ children, onClick, variant, size, icon, iconPosition }) => {
   const baseStyles = "rounded-md hover:duration-100 ease-in-out inline-flex items-center justify-center gap-1";
 
