@@ -1,5 +1,33 @@
 import React from "react";
 
+/**
+ * CheckBox component that renders a checkbox with an optional label.
+ * 
+ * @component
+ * @param {Object} props - The props object.
+ * @param {string} props.label - The label for the checkbox.
+ * @param {boolean} props.checked - The checked state of the checkbox.
+ * @param {function} props.onChange - The change handler function.
+ * @returns {JSX.Element} The rendered checkbox component.
+ * 
+ * @example
+ * // Example usage:
+ * import CheckBox from './components/CheckBox';
+ * 
+ * function App() {
+ *   const [checked, setChecked] = React.useState(false);
+ * 
+ *   const handleChange = (event) => {
+ *     setChecked(event.target.checked);
+ *   };
+ * 
+ *   return (
+ *     <div>
+ *       <CheckBox label="Accept Terms and Conditions" checked={checked} onChange={handleChange} />
+ *     </div>
+ *   );
+ * }
+ */
 const CheckBox = ({ label, checked, onChange }) => {
   return (
     <label className="inline-flex items-center">

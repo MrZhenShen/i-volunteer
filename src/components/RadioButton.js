@@ -1,5 +1,48 @@
 import React from "react";
 
+/**
+ * RadioButton component that renders a radio button with an optional label.
+ * 
+ * @component
+ * @param {Object} props - The props object.
+ * @param {string} props.label - The label for the radio button.
+ * @param {string} props.name - The name of the radio button group.
+ * @param {boolean} props.checked - The checked state of the radio button.
+ * @param {function} props.onChange - The change handler function.
+ * @param {string} props.value - The value of the radio button.
+ * @returns {JSX.Element} The rendered radio button component.
+ * 
+ * @example
+ * // Example usage:
+ * import RadioButton from './components/RadioButton';
+ * 
+ * function App() {
+ *   const [selectedValue, setSelectedValue] = React.useState('option1');
+ * 
+ *   const handleChange = (event) => {
+ *     setSelectedValue(event.target.value);
+ *   };
+ * 
+ *   return (
+ *     <div>
+ *       <RadioButton 
+ *         label="Option 1" 
+ *         name="options" 
+ *         value="option1" 
+ *         checked={selectedValue === 'option1'} 
+ *         onChange={handleChange} 
+ *       />
+ *       <RadioButton 
+ *         label="Option 2" 
+ *         name="options" 
+ *         value="option2" 
+ *         checked={selectedValue === 'option2'} 
+ *         onChange={handleChange} 
+ *       />
+ *     </div>
+ *   );
+ * }
+ */
 const RadioButton = ({ label, name, checked, onChange, value }) => {
   return (
     <label className="inline-flex items-center">
