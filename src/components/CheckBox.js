@@ -9,7 +9,7 @@ const CheckBox = ({ label, checked, onChange }) => {
         checked={checked}
         onChange={onChange}
       />
-      <span className="ml-2 font-eukraine text-base font-normal leading-6 text-body-900 text-right">
+      <span className="ml-2 text-base font-normal leading-6 text-body-900 text-right">
         {label}
       </span>
     </label>
