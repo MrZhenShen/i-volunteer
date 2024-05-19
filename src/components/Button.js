@@ -5,7 +5,7 @@ import Icon from "./Icon";
 
 /**
  * Button component that renders a button with optional icon, variant, and size.
- * 
+ *
  * @component
  * @param {Object} props - The props object.
  * @param {React.ReactNode} props.children - The content of the button.
@@ -15,11 +15,11 @@ import Icon from "./Icon";
  * @param {string} [props.icon] - The name of the icon to render.
  * @param {string} [props.iconPosition] - The position of the icon. Can be "start" or "end".
  * @returns {JSX.Element} The rendered button component.
- * 
+ *
  * @example
  * // Example usage:
  * import Button from './components/Button';
- * 
+ *
  * function App() {
  *   return (
  *     <div>
@@ -33,8 +33,17 @@ import Icon from "./Icon";
  *   );
  * }
  */
-const Button = ({ children, onClick, variant, size, icon, iconPosition }) => {
-  const baseStyles = "rounded-md hover:duration-100 ease-in-out inline-flex items-center justify-center gap-1";
+const Button = ({
+  children,
+  onClick,
+  variant = "primary",
+  size = "default",
+  icon,
+  iconPosition = "start",
+  ...props
+}) => {
+  const baseStyles =
+    "rounded-md hover:duration-100 ease-in-out inline-flex items-center justify-center gap-1";
 
   const variants = {
     primary:
@@ -60,16 +69,24 @@ const Button = ({ children, onClick, variant, size, icon, iconPosition }) => {
   const iconSizes = {
     default: "size-6",
     small: "size-5",
-  }
+  };
 
-  const buttonClass = classNames(baseStyles, variants[variant], buttonSizes[size]);
-  const iconClass = classNames(baseStyles, iconSizes[size])
+  const buttonClass = classNames(
+    baseStyles,
+    variants[variant],
+    buttonSizes[size]
+  );
+  const iconClass = classNames(baseStyles, iconSizes[size]);
 
   return (
-    <button onClick={onClick} className={buttonClass}>
-      {icon && iconPosition === 'start' && <Icon name={icon} className={iconClass} />}
+    <button onClick={onClick} className={buttonClass} {...props}>
+      {icon && iconPosition === "start" && (
+        <Icon name={icon} className={iconClass} />
+      )}
       <span>{children}</span>
-      {icon && iconPosition === 'end' && <Icon name={icon} className={iconClass} />}
+      {icon && iconPosition === "end" && (
+        <Icon name={icon} className={iconClass} />
+      )}
     </button>
   );
 };
@@ -80,15 +97,7 @@ Button.propTypes = {
   variant: PropTypes.oneOf(["primary", "secondary", "destructive", "link"]),
   size: PropTypes.oneOf(["default", "small"]),
   icon: PropTypes.string,
-  iconPosition: PropTypes.oneOf(['start', 'end']),
-};
-
-Button.defaultProps = {
-  onClick: () => {},
-  variant: "primary",
-  size: "default",
-  icon: null,
-  iconPosition: 'start',
+  iconPosition: PropTypes.oneOf(["start", "end"]),
 };
 
 export default Button;

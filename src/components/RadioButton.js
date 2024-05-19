@@ -1,3 +1,4 @@
+import { useField } from "formik";
 import React from "react";
 
 /**
@@ -8,7 +9,6 @@ import React from "react";
  * @param {string} props.label - The label for the radio button.
  * @param {string} props.name - The name of the radio button group.
  * @param {boolean} props.checked - The checked state of the radio button.
- * @param {function} props.onChange - The change handler function.
  * @param {string} props.value - The value of the radio button.
  * @returns {JSX.Element} The rendered radio button component.
  * 
@@ -40,19 +40,33 @@ import React from "react";
  *         onChange={handleChange} 
  *       />
  *     </div>
+ *    <Formik>
+ *      <Form>
+ *        <Field
+ *            name="gender"
+ *            label="Male"
+ *            value="male"
+ *            component={RadioButton}
+ *          />
+ *          <Field
+ *            name="gender"
+ *            label="Female"
+ *            value="female"
+ *            component={RadioButton}
+ *          />
+ *      </Form>
+ *    </Formik>
  *   );
  * }
  */
-const RadioButton = ({ label, name, checked, onChange, value }) => {
+const RadioButton = ({ field, label, ...props }) => {
   return (
     <label className="inline-flex items-center">
       <input
         type="radio"
-        name={name}
-        value={value}
+        {...field}
+        {...props}
         className="size-4 rounded-full border-2 hover:duration-100 ease-in-out border-primary-200 hover:border-primary-100 text-primary-500 hover:text-primary-400"
-        checked={checked}
-        onChange={onChange}
       />
       <span className="ml-2 text-base font-normal leading-6 text-body-900 text-right">
         {label}
