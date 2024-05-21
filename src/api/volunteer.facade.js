@@ -24,7 +24,31 @@ export const VolunteerStatus = {
  * @property {number} latitude - The latitude coordinate of the Volunteer's location.
  * @property {number} longitude - The longitude coordinate of the Volunteer's location.
  * @property {VolunteerStatus} status - The status of the Volunteer, e.g., "AVAILABLE".
- */
+*/
+
+/**
+ * @typedef {Object} Token
+ * @property {number} id - The unique identifier for the token.
+ * @property {string} token - The token string.
+ * @property {string} expiryDateTime - The expiration date and time of the token in ISO format.
+*/
+
+/**
+ * @typedef {Object} VolunteerContactInfo
+ * @property {number} id - The unique identifier for the volunteer contact info.
+ * @property {string} mobilePhone - The mobile phone number of the volunteer.
+ * @property {Token[]} tokens - An array of tokens associated with the volunteer.
+*/
+
+/**
+ * @typedef {Object} VolunteerProfile
+ * @property {number} id - The unique identifier for the volunteer.
+ * @property {number} correlationId - The correlation ID associated with the volunteer.
+ * @property {number} region - The region code of the volunteer.
+ * @property {VolunteerStatus} status - The status of the volunteer (e.g., "AVAILABLE").
+ * @property {VolunteerContactInfo} volunteerContactInfo - The contact information for the volunteer.
+ * @property {string} rnokpp - The RNOKPP (a unique identifier, possibly a national ID or similar).
+*/
 
 /**
  * @typedef {Object} UpdateVolunteerRequest
