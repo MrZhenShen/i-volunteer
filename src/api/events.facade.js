@@ -1,4 +1,4 @@
-import { axiosInstance } from './axiosInstance';
+import axiosInstance from '../utils/axios';
 
 const EVENTS_PATH = '/events';
 
