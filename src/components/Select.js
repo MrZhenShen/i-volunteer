@@ -4,6 +4,36 @@ import { useField } from 'formik';
 import classNames from 'classnames';
 import Icon from './Icon';
 
+/**
+ * A custom Select component that integrates with Formik for form handling.
+ * 
+ * @component
+ * @param {Object} props - The props object.
+ * @param {string} props.label - The label for the select element.
+ * @param {string} props.placeholder - The placeholder for the select element.
+ * @param {string} props.footnote - The footnote text for the select element.
+ * @param {string} [props.size='default'] - The size of the select element, can be 'default' or 'small'.
+ * @param {boolean} props.disabled - Whether the select element is disabled.
+ * @param {Array} props.options - An array of options for the select element.
+ * @param {Object} props.field - The Formik field props.
+ * 
+ * @returns {JSX.Element} The rendered Select component.
+ * 
+ * @example
+ * const options = [
+ *  { value: 'option1', label: 'Option 1' },
+ *  { value: 'option2', label: 'Option 2' }
+ * ];
+ * return (
+ *  <Select
+ *    label="Select an option"
+ *    placeholder="Please select"
+ *    footnote="Choose wisely"
+ *    size="default"
+ *    options={options}
+ *  />
+ * );
+ */
 const Select = ({
   label,
   placeholder,
