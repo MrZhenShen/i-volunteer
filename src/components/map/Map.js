@@ -8,6 +8,8 @@ import { EventMarker, MedicMarker, PolicemanMarker, RescuerMarker } from './mark
   * @param {Array<{ id: number, type: string, position: Array<number> }>} props.markers
   * @returns {JSX.Element}
   * @example <Map markers={[{ id: 1, type: 'event', position: [51.500, -0.09] }]} />
+  * @note The `type` can be 'event', 'medic', 'policeman', or 'rescuer'.
+  * @note The parent component must have its own height
 */
 export const Map = ({ markers }) => {
   return (
