@@ -5,15 +5,11 @@ import ReactDomServer from 'react-dom/server';
 import classnames from 'classnames';
 
 import RescuerIcon from '../icons/Rescuer'
-import SvgExclamation from '../icons/Exclamation'
+import ExclamationIcon from '../icons/Exclamation'
 import DoctorIcon from '../icons/Doctor'
 import PolicemanIcon from '../icons/Police'
 
 const Arrow = ({ color }) => {
-  const colors = {
-    blue: 'border-t-blue-500',
-    red: 'border-t-red-500',
-  }
   const arrowStyle = [
     'w-0', 'h-0', 'block',
     'absolute', 'top-full', 'left-1/2',
@@ -24,61 +20,61 @@ const Arrow = ({ color }) => {
     'border-r-[3px]', 'border-r-transparent',
   ];
 
-  return <span className={classnames(arrowStyle, colors[color])}></span>
+  return <span className={classnames(arrowStyle, color)}></span>
 }
 
 const Dot = ({ color }) => {
-  const colors = {
-    blue: 'bg-blue-500',
-    red: 'bg-red-500',
-  }
   const dotStyle = ['absolute', 'bottom-[-10px]',
     'left-1/2', 'translate-x-[-50%]', 'block', 'w-1',
     'h-1', 'rounded-full', 'border', 'border-solid',
     'border-white'];
 
-  return <span className={classnames(dotStyle, colors[color])}></span>
+  return <span className={classnames(dotStyle, color)}></span>
 }
 
-const MarkerIcon = ({ color, children }) => {
-  const colors = {
-    blue: 'bg-blue-500',
-    red: 'bg-red-500',
-  }
+const MarkerIcon = ({ color, children, selected }) => {
   const baseStyles = `rounded-full`;
   const baseSize = ['w-8', 'h-8'];
+  const selectedSize = ['w-12', 'h-12'];
   const layoutStyle = ['flex', 'justify-center', 'items-center', 'relative', 'rounded-full'];
 
   const className = classnames(
     baseStyles,
-    baseSize,
+    selected ? selectedSize : baseSize,
     layoutStyle,
-    colors[color],
+    color,
   );
 
   return <div className={className}>{children}</div>
 }
 
-/**
-  * @param {Object} props
-  * @param {Array<number>} props.position
-  * @returns {JSX.Element}
-  * @example <RescuerMarker position={[51.500, -0.1]} />
-*/
-export const RescuerMarker = ({ position }) => {
-  const color = 'blue';
+const CommonMarker = ({ type, position, selected, children }) => {
+  const classMap = {
+    event: {
+      color: selected ? 'bg-red-800' : 'bg-red-500',
+      borderColor: selected ? 'border-t-red-800' : 'border-t-red-500',
+    },
+    volunteer: {
+      color: selected ? 'bg-primary-400' : 'bg-blue-500',
+      borderColor: selected ? 'border-t-primary-400' : 'border-t-blue-500',
+    },
+  };
+  const anchor = selected ? [24, 58] : [16, 42];
+  const size = selected ? [48, 58] : [32, 42];
+
   const icon = new DivIcon({
     html: ReactDomServer.renderToString(
       <>
-        <MarkerIcon color={color}>
-          <RescuerIcon className="fill-white w-6 h-6" />
-          <Arrow color={color} />
-          <Dot color={color} />
+        <MarkerIcon color={classMap[type]?.color} selected={selected}>
+          {children}
+          <Arrow color={classMap[type]?.borderColor} />
+          <Dot color={classMap[type]?.color} />
         </MarkerIcon>
       </>
     ),
-    className: 'w-8 h-8 bg-transparent',
-    iconAnchor: [24, 12]
+    className: 'bg-transparent',
+    iconSize: size,
+    iconAnchor: anchor,
   })
 
   return <Marker position={position} icon={icon}></Marker>
@@ -87,74 +83,72 @@ export const RescuerMarker = ({ position }) => {
 /**
   * @param {Object} props
   * @param {Array<number>} props.position
+  * @param {boolean} props.selected
+  * @returns {JSX.Element}
+  * @example <RescuerMarker position={[51.500, -0.1]} selected={true} />
+*/
+export const RescuerMarker = ({ position, selected }) => {
+  const iconFill = 'fill-white';
+  const iconSize = selected ? ['w-8', 'h-8'] : ['w-5', 'h-5'];
+
+  return (
+    <CommonMarker type="volunteer" position={position} selected={selected}>
+      <RescuerIcon className={classnames(iconFill, iconSize)} />
+    </CommonMarker>
+  )
+}
+
+/**
+  * @param {Object} props
+  * @param {Array<number>} props.position
+  * @param {boolean} props.selected
   * @returns {JSX.Element}
   * @example <MedicMarker position={[51.500, -0.1]} />
 */
-export const MedicMarker = ({ position }) => {
-  const color = 'blue';
-  const icon = new DivIcon({
-    html: ReactDomServer.renderToString(
-      <>
-        <MarkerIcon color={color}>
-          <DoctorIcon className="fill-white w-6 h-6" />
-          <Arrow color={color} />
-          <Dot color={color} />
-        </MarkerIcon>
-      </>
-    ),
-    className: 'w-8 h-8 bg-transparent',
-    iconAnchor: [24, 12]
-  })
+export const MedicMarker = ({ position, selected }) => {
+  const iconFill = 'fill-white';
+  const iconSize = selected ? ['w-8', 'h-8'] : ['w-5', 'h-5'];
 
-  return <Marker position={position} icon={icon}></Marker>
+  return (
+    <CommonMarker type="volunteer" position={position} selected={selected}>
+      <DoctorIcon className={classnames(iconFill, iconSize)} />
+    </CommonMarker>
+  )
+
 }
-
 /**
   * @param {Object} props
   * @param {Array<number>} props.position
+  * @param {boolean} props.selected
   * @returns {JSX.Element}
-  * @example <PolicemanMarker position={[51.500, -0.1]} />
+  * @example <PolicemanMarker position={[51.500, -0.1]} selected />
 */
-export const PolicemanMarker = ({ position }) => {
-  const color = 'blue';
-  const icon = new DivIcon({
-    html: ReactDomServer.renderToString(
-      <>
-        <MarkerIcon color={color}>
-          <PolicemanIcon className="fill-white w-6 h-6" />
-          <Arrow color={color} />
-          <Dot color={color} />
-        </MarkerIcon>
-      </>
-    ),
-    className: 'w-8 h-8 bg-transparent',
-    iconAnchor: [24, 12]
-  })
+export const PolicemanMarker = ({ position, selected }) => {
+  const iconFill = 'fill-white';
+  const iconSize = selected ? ['w-8', 'h-8'] : ['w-5', 'h-5'];
 
-  return <Marker position={position} icon={icon}></Marker>
+  return (
+    <CommonMarker type="volunteer" position={position} selected={selected}>
+      <PolicemanIcon className={classnames(iconFill, iconSize)} />
+    </CommonMarker>
+  )
 }
+
 
 /**
   * @param {Object} props
   * @param {Array<number>} props.position
+  * @param {boolean} props.selected
   * @returns {JSX.Element}
   * @example <EventMarker position={[51.500, -0.1]} />
 */
-export const EventMarker = ({ position }) => {
-  const color = 'red';
-  const icon = new DivIcon({
-    html: ReactDomServer.renderToString(
-      <>
-        <MarkerIcon color={color}>
-          <SvgExclamation className="fill-white w-6 h-6" />
-          <Arrow color={color} />
-          <Dot color={color} />
-        </MarkerIcon>
-      </>
-    ),
-    className: 'w-8 h-8 bg-transparent',
-    iconAnchor: [24, 12]
-  })
-
-  return <Marker position={position} icon={icon}></Marker>
+export const EventMarker = ({ position, selected }) => {
+  const iconFill = 'fill-white';
+  const iconSize = selected ? ['w-8', 'h-8'] : ['w-5', 'h-5'];
+  return (
+    <CommonMarker type="event" position={position} selected={selected}>
+      <ExclamationIcon className={classnames(iconFill, iconSize)} />
+    </CommonMarker>
+  )
 }
+

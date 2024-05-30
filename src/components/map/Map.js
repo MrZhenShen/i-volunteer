@@ -13,28 +13,28 @@ import { EventMarker, MedicMarker, PolicemanMarker, RescuerMarker } from './mark
 */
 export const Map = ({ markers }) => {
   return (
-    <MapContainer
-      center={[51.505, -0.09]} zoom={13} scrollWheelZoom={true} className="h-full">
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      {
-        (markers ?? []).map(({ id, type, position }) => {
-          switch (type) {
-            case 'event':
-              return <EventMarker key={`${type}/${id}`} position={position} />
-            case 'medic':
-              return <MedicMarker key={`${type}/${id}`} position={position} />
-            case 'policeman':
-              return <PolicemanMarker key={`${type}/${id}`} position={position} />
-            case 'rescuer':
-              return <RescuerMarker key={`${type}/${id}`} position={position} />
-            default:
-              return null
-          }
-        })
-      }
-    </MapContainer>
+      <MapContainer
+        center={[51.505, -0.09]} zoom={13} scrollWheelZoom={true} className="h-full">
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        {
+          (markers ?? []).map(({ id, type, position }) => {
+            switch (type) {
+              case 'event':
+                return <EventMarker key={`${type}/${id}`} position={position} selected />
+              case 'medic':
+                return <MedicMarker key={`${type}/${id}`} position={position} selected />
+              case 'policeman':
+                return <PolicemanMarker key={`${type}/${id}`} position={position} selected />
+              case 'rescuer':
+                return <RescuerMarker key={`${type}/${id}`} position={position} selected />
+              default:
+                return null
+            }
+          })
+        }
+      </MapContainer>
   )
 }
