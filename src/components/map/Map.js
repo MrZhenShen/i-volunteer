@@ -31,13 +31,13 @@ export const Map = ({ markers, center, zoom }) => {
         (markers ?? []).map(({ id, type, position }) => {
           switch (type) {
             case 'event':
-              return <EventMarker key={`${type}/${id}`} position={position} selected />
+              return <EventMarker key={`${type}/${id}`} id={id} position={position} selected />
             case 'medic':
-              return <MedicMarker key={`${type}/${id}`} position={position} selected />
+              return <MedicMarker key={`${type}/${id}`} id={id} position={position} selected />
             case 'policeman':
-              return <PolicemanMarker key={`${type}/${id}`} position={position} selected />
+              return <PolicemanMarker key={`${type}/${id}`} id={id} position={position} selected />
             case 'rescuer':
-              return <RescuerMarker key={`${type}/${id}`} position={position} selected />
+              return <RescuerMarker key={`${type}/${id}`} id={id} position={position} selected />
             default:
               return null
           }

@@ -1,6 +1,7 @@
 import { DivIcon } from 'leaflet';
 import React from 'react';
 import { Marker } from 'react-leaflet';
+import { useDispatch } from 'react-redux';
 import ReactDomServer from 'react-dom/server';
 import classnames from 'classnames';
 
@@ -8,6 +9,7 @@ import RescuerIcon from '../icons/Rescuer'
 import ExclamationIcon from '../icons/Exclamation'
 import DoctorIcon from '../icons/Doctor'
 import PolicemanIcon from '../icons/Police'
+import { actions } from './mapSlice';
 
 const Arrow = ({ color }) => {
   const arrowStyle = [
@@ -48,7 +50,7 @@ const MarkerIcon = ({ color, children, selected }) => {
   return <div className={className}>{children}</div>
 }
 
-const CommonMarker = ({ type, position, selected, children }) => {
+const CommonMarker = ({ id, type, position, selected, children }) => {
   const classMap = {
     event: {
       color: selected ? 'bg-red-800' : 'bg-red-500',
@@ -61,6 +63,8 @@ const CommonMarker = ({ type, position, selected, children }) => {
   };
   const anchor = selected ? [24, 58] : [16, 42];
   const size = selected ? [48, 58] : [32, 42];
+
+  const dispatch = useDispatch();
 
   const icon = new DivIcon({
     html: ReactDomServer.renderToString(
@@ -77,7 +81,16 @@ const CommonMarker = ({ type, position, selected, children }) => {
     iconAnchor: anchor,
   })
 
-  return <Marker position={position} icon={icon}></Marker>
+  return <Marker
+    eventHandlers={
+      {
+        click: () => {
+          dispatch(actions.markerClick({ id, type, position }))
+        }
+      }
+    }
+    position={position}
+    icon={icon}></Marker>
 }
 
 /**
@@ -87,12 +100,12 @@ const CommonMarker = ({ type, position, selected, children }) => {
   * @returns {JSX.Element}
   * @example <RescuerMarker position={[51.500, -0.1]} selected={true} />
 */
-export const RescuerMarker = ({ position, selected }) => {
+export const RescuerMarker = ({ id, position, selected }) => {
   const iconFill = 'fill-white';
   const iconSize = selected ? ['w-8', 'h-8'] : ['w-5', 'h-5'];
 
   return (
-    <CommonMarker type="volunteer" position={position} selected={selected}>
+    <CommonMarker id={id} type="volunteer" position={position} selected={selected}>
       <RescuerIcon className={classnames(iconFill, iconSize)} />
     </CommonMarker>
   )
@@ -105,12 +118,12 @@ export const RescuerMarker = ({ position, selected }) => {
   * @returns {JSX.Element}
   * @example <MedicMarker position={[51.500, -0.1]} />
 */
-export const MedicMarker = ({ position, selected }) => {
+export const MedicMarker = ({ id, position, selected }) => {
   const iconFill = 'fill-white';
   const iconSize = selected ? ['w-8', 'h-8'] : ['w-5', 'h-5'];
 
   return (
-    <CommonMarker type="volunteer" position={position} selected={selected}>
+    <CommonMarker id={id} type="volunteer" position={position} selected={selected}>
       <DoctorIcon className={classnames(iconFill, iconSize)} />
     </CommonMarker>
   )
@@ -123,17 +136,16 @@ export const MedicMarker = ({ position, selected }) => {
   * @returns {JSX.Element}
   * @example <PolicemanMarker position={[51.500, -0.1]} selected />
 */
-export const PolicemanMarker = ({ position, selected }) => {
+export const PolicemanMarker = ({ id, position, selected }) => {
   const iconFill = 'fill-white';
   const iconSize = selected ? ['w-8', 'h-8'] : ['w-5', 'h-5'];
 
   return (
-    <CommonMarker type="volunteer" position={position} selected={selected}>
+    <CommonMarker id={id} type="volunteer" position={position} selected={selected}>
       <PolicemanIcon className={classnames(iconFill, iconSize)} />
     </CommonMarker>
   )
 }
-
 
 /**
   * @param {Object} props
@@ -142,11 +154,11 @@ export const PolicemanMarker = ({ position, selected }) => {
   * @returns {JSX.Element}
   * @example <EventMarker position={[51.500, -0.1]} />
 */
-export const EventMarker = ({ position, selected }) => {
+export const EventMarker = ({ id, position, selected }) => {
   const iconFill = 'fill-white';
   const iconSize = selected ? ['w-8', 'h-8'] : ['w-5', 'h-5'];
   return (
-    <CommonMarker type="event" position={position} selected={selected}>
+    <CommonMarker id={id} type="event" position={position} selected={selected}>
       <ExclamationIcon className={classnames(iconFill, iconSize)} />
     </CommonMarker>
   )

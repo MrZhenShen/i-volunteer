@@ -6,7 +6,8 @@ export const eventsSlice = createSlice({
   name: 'MAP_EVENTS',
   initialState,
   reducers: {
-    click: () => {}
+    click: () => {},
+    markerClick: () => {},
   },
 });
 
