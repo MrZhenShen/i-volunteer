@@ -40,6 +40,7 @@ const Button = ({
   size = "default",
   icon,
   iconPosition = "start",
+  classNameExtended,
   ...props
 }) => {
   const baseStyles =
@@ -74,7 +75,8 @@ const Button = ({
   const buttonClass = classNames(
     baseStyles,
     variants[variant],
-    buttonSizes[size]
+    buttonSizes[size],
+    classNameExtended,
   );
   const iconClass = classNames(baseStyles, iconSizes[size]);
 
@@ -98,6 +100,7 @@ Button.propTypes = {
   size: PropTypes.oneOf(["default", "small"]),
   icon: PropTypes.string,
   iconPosition: PropTypes.oneOf(["start", "end"]),
+  classNameExtended: PropTypes.string,
 };
 
 export default Button;
