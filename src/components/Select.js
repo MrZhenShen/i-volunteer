@@ -1,12 +1,11 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { useField } from 'formik';
-import classNames from 'classnames';
-import Icon from './Icon';
+import React from "react";
+import PropTypes from "prop-types";
+import { useField } from "formik";
+import classNames from "classnames";
 
 /**
  * A custom Select component that integrates with Formik for form handling.
- * 
+ *
  * @component
  * @param {Object} props - The props object.
  * @param {string} props.label - The label for the select element.
@@ -16,9 +15,9 @@ import Icon from './Icon';
  * @param {boolean} props.disabled - Whether the select element is disabled.
  * @param {Array} props.options - An array of options for the select element.
  * @param {Object} props.field - The Formik field props.
- * 
+ *
  * @returns {JSX.Element} The rendered Select component.
- * 
+ *
  * @example
  * const options = [
  *  { value: 'option1', label: 'Option 1' },
@@ -38,7 +37,7 @@ const Select = ({
   label,
   placeholder,
   footnote,
-  size = 'default',
+  size = "default",
   disabled,
   options = [],
   ...props
@@ -55,23 +54,23 @@ const Select = ({
   `;
 
   const selectSizes = {
-    default: 'py-2 px-4 text-base',
-    small: 'py-1 px-3 text-sm',
+    default: "py-2 px-4 text-base",
+    small: "py-1 px-3 text-sm",
   };
 
   const labelSizes = {
-    default: 'text-base leading-6',
-    small: 'text-sm leading-5',
+    default: "text-base leading-6",
+    small: "text-sm leading-5",
   };
 
   const iconSizes = {
-    default: 'w-6 h-6',
-    small: 'w-5 h-5',
+    default: "w-6 h-6",
+    small: "w-5 h-5",
   };
 
   const selectClass = classNames(baseSelectStyles, selectSizes[size]);
-  const labelClass = classNames('block text-body-900', labelSizes[size]);
-  const iconClass = classNames('text-body-900', iconSizes[size]);
+  const labelClass = classNames("block text-body-900", labelSizes[size]);
+  const iconClass = classNames("text-body-900", iconSizes[size]);
 
   return (
     <div className="flex flex-col gap-2">
@@ -84,16 +83,17 @@ const Select = ({
           {...field}
           {...props}
         >
-          <option value="" disabled selected>{placeholder}</option>
+          {placeholder && (
+            <option value="" disabled selected>
+              {placeholder}
+            </option>
+          )}
           {options.map((option) => (
             <option key={option.value} value={option.value}>
               {option.label}
             </option>
           ))}
         </select>
-        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pr-3">
-            <Icon name="chevron-down" className={iconClass} />
-          </div>
       </div>
 
       {footnote && (
@@ -108,7 +108,7 @@ Select.propTypes = {
   placeholder: PropTypes.string,
   footnote: PropTypes.string,
   icon: PropTypes.string,
-  size: PropTypes.oneOf(['default', 'small']),
+  size: PropTypes.oneOf(["default", "small"]),
   disabled: PropTypes.bool,
   options: PropTypes.arrayOf(
     PropTypes.shape({
