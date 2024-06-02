@@ -1,22 +1,30 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice } from "@reduxjs/toolkit";
 
-import { reducers, extraReducers } from './reducers';
+import { reducers, extraReducers } from "./reducers";
 
 const initialState = {
   loading: false,
-  data: [],
+  data: {
+    content: [],
+    page: 0,
+    size: 0,
+    totalPages: 0,
+    totalItems: 0,
+    hasNext: false,
+    hasPrevious: false,
+  },
   current: null,
   profile: null,
-  error: null
+  error: null,
 };
 
 export const volunteersSlice = createSlice({
-  name: 'volunteers',
+  name: "volunteers",
   initialState,
   reducers,
   extraReducers,
 });
 
-export const actions = volunteersSlice.actions
+export const actions = volunteersSlice.actions;
 
-export default volunteersSlice.reducer
+export default volunteersSlice.reducer;

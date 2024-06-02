@@ -4,8 +4,8 @@ import * as facade from '../../api/volunteer.facade';
 import { VOLUNTEERS, PROFILE } from './constants';
 import { FETCH_LIST, FETCH, POST, PUT, DELETE } from '../../redux/actions';
 
-export const fetchVolunteers = createAsyncThunk(`${VOLUNTEERS}/${FETCH_LIST}`, async () => {
-  return await facade.getVolunteers();
+export const fetchVolunteers = createAsyncThunk(`${VOLUNTEERS}/${FETCH_LIST}`, async (pageable) => {
+  return await facade.getVolunteers(pageable);
 });
 
 export const createVolunteer = createAsyncThunk(`${VOLUNTEERS}/${POST}`, async (volunteer) => {
