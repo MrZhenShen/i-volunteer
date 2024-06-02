@@ -25,6 +25,26 @@ export const EventStatus = {
 }
 
 /**
+ * @typedef {Object} Pageable
+ * @property {number} page - The number of page (required)
+ * @property {number} size - The max amount of items in page (required)
+ * @property {string} [sortBy] - The field by which list content will be sorted (optional)
+ * @property {string} [sortOrder] - The sorting order (optional)
+ * @property {string} [filter] - The string by which items are filtered (optional)
+ */
+
+/**
+ * @typedef {Object} Page<T>
+ * @property {T[]} content - The list of entities
+ * @property {number} page - The number of page
+ * @property {number} size - The max amount of items in page
+ * @property {number} totalPages - The total amount of pages might be retrieved
+ * @property {number} totalItems - The total amount of item in storage
+ * @property {boolean} hasNext - The mark if there might be retrieved next page
+ * @property {boolean} hasPrevious - The mark if there might be retrieved previos page
+ */
+
+/**
  * @typedef {Object} EventRequest
  * @property {number} id - The unique identifier for the event.
  * @property {EventType} eventType - The type of the event.
@@ -50,10 +70,20 @@ export const EventStatus = {
 
 /**
  * Fetches all events.
- * @returns {Promise<EventDTO[]>} - A promise that resolves to an array of event objects.
+ * @param {Pageable} pageable
+ * @returns {Promise<Page<EventDTO>>} - A promise that resolves to an array of event objects.
  */
-export const getAllEvents = async () => {
-  const response = await axiosInstance.get(EVENTS_PATH);
+export const getAllEvents = async (pageable) => {
+  const { page = 1, size = 10, sortBy, sortOrder } = pageable;
+
+  const queryParams = new URLSearchParams({
+    page,
+    size,
+    ...(sortBy && { sortBy }),
+    ...(sortBy && sortOrder && { sortOrder }),
+  });
+
+  const response = await axiosInstance.get(`${EVENTS_PATH}?${queryParams}`);
   return response.data;
 };
 

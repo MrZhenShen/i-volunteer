@@ -4,8 +4,8 @@ import * as facade from '../../api/events.facade';
 import { EVENTS } from './constants';
 import { FETCH_LIST, FETCH, POST, DELETE } from '../../redux/actions';
 
-export const fetchEvents = createAsyncThunk(`${EVENTS}/${FETCH_LIST}`, async () => {
-  return await facade.getAllEvents();
+export const fetchEvents = createAsyncThunk(`${EVENTS}/${FETCH_LIST}`, async (pageable) => {
+  return await facade.getAllEvents(pageable);
 });
 
 export const createEvent = createAsyncThunk(`${EVENTS}/${POST}`, async (volunteer) => {
