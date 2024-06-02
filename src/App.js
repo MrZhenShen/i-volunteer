@@ -1,16 +1,15 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Volunteer from "./containers/Volunteer";
-import Event from "./containers/Event";
+import Volunteers from "./containers/Volunteers";
+import Events from "./containers/Events";
 import NavigationBar from "./containers/NavigationBar";
 
 function App() {
   return (
     <BrowserRouter>
+    <NavigationBar />
       <Routes>
-        <Route path="/" element={<NavigationBar />}>
-          <Route path="/volunteers" element={<Volunteer />} />
-          <Route path="/events" element={<Event />} />
-        </Route>
+          <Route path="/volunteers" element={<Volunteers />} />
+          <Route path="/events" element={<Events />} />
       </Routes>
     </BrowserRouter>
   );
