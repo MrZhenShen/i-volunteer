@@ -6,7 +6,7 @@ import { EventLayer } from './EventLayer';
 
 /**
   * @param {Object} props
-  * @param {Array<{ id: number, type: string, position: Array<number> }>} props.markers
+  * @param {Array<{ id: number, type: string, position: Array<number>, selected: boolean }>} props.markers
   * @returns {JSX.Element}
   * @example <Map markers={[{ id: 1, type: 'event', position: [51.500, -0.09] }]} />
   * @note The `type` can be 'event', 'medic', 'policeman', or 'rescuer'.
@@ -28,16 +28,16 @@ export const Map = ({ markers, center, zoom }) => {
       />
       <EventLayer />
       {
-        (markers ?? []).map(({ id, type, position }) => {
+        (markers ?? []).map(({ id, type, position, selected }) => {
           switch (type) {
             case 'event':
-              return <EventMarker key={`${type}/${id}`} id={id} position={position} selected />
+              return <EventMarker key={`${type}/${id}`} id={id} position={position} selected={selected} />
             case 'medic':
-              return <MedicMarker key={`${type}/${id}`} id={id} position={position} selected />
+              return <MedicMarker key={`${type}/${id}`} id={id} position={position} selected={selected} />
             case 'policeman':
-              return <PolicemanMarker key={`${type}/${id}`} id={id} position={position} selected />
+              return <PolicemanMarker key={`${type}/${id}`} id={id} position={position} selected={selected} />
             case 'rescuer':
-              return <RescuerMarker key={`${type}/${id}`} id={id} position={position} selected />
+              return <RescuerMarker key={`${type}/${id}`} id={id} position={position} selected={selected} />
             default:
               return null
           }
