@@ -3,12 +3,11 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Layout } from "./layouts/Layout";
 
 import { MapPage } from "./pages/MapPage";
+import Volunteers from "./containers/Volunteers";
 
 function Vol() {
   return (
-    <div>
-      <h1>Volunteer</h1>
-    </div>
+    <Volunteers/>
   );
 }
 

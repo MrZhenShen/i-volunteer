@@ -8,6 +8,7 @@ import {
 } from "@headlessui/react";
 import Icon from "../Icon";
 import Status from "../Status";
+import { Map } from "../map/Map";
 
 const VolunteerDetailsSlideOver = ({ open, setOpen, volunteer }) => {
   const fieldStyle = "flex items-center";
@@ -31,7 +32,7 @@ const VolunteerDetailsSlideOver = ({ open, setOpen, volunteer }) => {
               leaveTo="translate-x-full"
             >
               <DialogPanel className="pointer-events-auto w-screen max-w-xl">
-                <form className="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl">
+                <div className="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl">
                   <div className="h-0 flex-1 overflow-y-auto">
                     <div className="bg-gradient-to-l from-[#53678A] to-[#394966] p-8">
                       <div className="flex flex-col items-center justify-between">
@@ -108,10 +109,25 @@ const VolunteerDetailsSlideOver = ({ open, setOpen, volunteer }) => {
                             {volunteer.region}
                           </dd>
                         </div>
+
+                        <div className={fieldStyle}>
+                          <Map
+                            markers={[
+                              {
+                                id: volunteer.id,
+                                type: "rescuer",
+                                position: [
+                                  volunteer.latitude,
+                                  volunteer.longitude,
+                                ],
+                              },
+                            ]}
+                          />
+                        </div>
                       </dl>
                     </div>
                   </div>
-                </form>
+                </div>
               </DialogPanel>
             </TransitionChild>
           </div>
