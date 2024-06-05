@@ -81,7 +81,7 @@ const Button = ({
   const iconClass = classNames(baseStyles, iconSizes[size]);
 
   return (
-    <button onClick={onClick} className={buttonClass} {...props}>
+    <button onClick={onClick} className={buttonClass} type="button" {...props}>
       {icon && iconPosition === "start" && (
         <Icon name={icon} className={iconClass} />
       )}

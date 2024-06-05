@@ -11,9 +11,9 @@ import Status from "../Status";
 import { Map } from "../map/Map";
 
 const VolunteerDetailsSlideOver = ({ open, setOpen, volunteer }) => {
-  const fieldStyle = "flex items-center";
+  const fieldStyle = "flex";
   const fieldLabelStyle =
-    "text-sm text-body-600 sm:w-40 sm:flex-shrink-0 lg:w-44";
+    "text-sm text-body-600 py-1.5 px-2 sm:w-40 sm:flex-shrink-0 lg:w-44";
   const fieldInputStyle = "sm:col-span-2 sm:mt-0 grow";
   const fieldValueStyle = "text-body-900 leading-6 py-1.5 px-2";
 
@@ -33,7 +33,7 @@ const VolunteerDetailsSlideOver = ({ open, setOpen, volunteer }) => {
             >
               <DialogPanel className="pointer-events-auto w-screen max-w-xl">
                 <div className="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl">
-                  <div className="h-0 flex-1 overflow-y-auto">
+                  <div className="overflow-y-auto">
                     <div className="bg-gradient-to-l from-[#53678A] to-[#394966] p-8">
                       <div className="flex flex-col items-center justify-between">
                         <div className="w-full flex justify-end">
@@ -49,14 +49,17 @@ const VolunteerDetailsSlideOver = ({ open, setOpen, volunteer }) => {
                             />
                           </button>
                         </div>
-                        <div className="w-full flex items-center mt-8">
-                          <DialogTitle className="text-2xl font-semibold leading-6 text-white">
+                        <div className="w-full flex flex-col gap-4 mt-8">
+                          <DialogTitle className="text-2xl font-semibold leading-6 text-white select-all">
                             {volunteer.firstName} {volunteer.lastName}
                           </DialogTitle>
+                          <div className="text-xs font-light text-white select-all">
+                            {volunteer.correlationId}
+                          </div>
                         </div>
                       </div>
                     </div>
-                    <div className="flex flex-1 flex-col p-8 justify-between">
+                    <div className="p-8">
                       <dl className="flex flex-col gap-y-2">
                         <div className={fieldStyle}>
                           <dt className={fieldLabelStyle}>Імʼя</dt>
@@ -104,26 +107,51 @@ const VolunteerDetailsSlideOver = ({ open, setOpen, volunteer }) => {
                         </div>
 
                         <div className={fieldStyle}>
-                          <dt className={fieldLabelStyle}>Поштовий індекс</dt>
+                          <dt className={fieldLabelStyle}>Тел</dt>
                           <dd className={fieldValueStyle}>
-                            {volunteer.region}
+                            {volunteer.mobilePhone}
                           </dd>
                         </div>
 
                         <div className={fieldStyle}>
+                          <dt className={fieldLabelStyle}>Дата народження</dt>
+                          <dd className={fieldValueStyle}>
+                            {volunteer.birthDate}
+                          </dd>
+                        </div>
+
+                        <div className={fieldStyle}>
+                          <dt className={fieldLabelStyle}>Адреса</dt>
+                          <dd className={fieldValueStyle}>
+                            {volunteer.address.zipCode}
+                            {volunteer.address.state &&
+                              `, ${volunteer.address.state}`}
+                            {volunteer.address.city &&
+                              `, ${volunteer.address.city}`}
+                            {volunteer.address.street &&
+                              `, ${volunteer.address.street}`}
+                            {volunteer.address.buildingNumber &&
+                              `, ${volunteer.address.buildingNumber}`}
+                            {volunteer.address.apartmentNumber &&
+                              `, ${volunteer.address.apartmentNumber}`}
+                          </dd>
+                        </div>
+
+                        <div className="flex flex-col gap-y-2 h-80 py-3">
                           <Map
                             markers={[
                               {
                                 id: volunteer.id,
                                 type: "rescuer",
                                 position: [
-                                  volunteer.latitude,
-                                  volunteer.longitude,
+                                  volunteer.longitude, volunteer.latitude,
                                 ],
+                                selected: false,
                               },
                             ]}
                           />
                         </div>
+
                       </dl>
                     </div>
                   </div>

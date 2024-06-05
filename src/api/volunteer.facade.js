@@ -40,10 +40,13 @@ export const VolunteerStatus = {
  * @property {string} firstName - The first name of the Volunteer.
  * @property {string} lastName - The last name of the Volunteer.
  * @property {string} mobilePhone - The mobile phone number of the Volunteer.
- * @property {number} region - The region code of the Volunteer.
+ * @property {Address} address
+ * @property {string} birthDate
  * @property {number} latitude - The latitude coordinate of the Volunteer's location.
  * @property {number} longitude - The longitude coordinate of the Volunteer's location.
  * @property {VolunteerStatus} status - The status of the Volunteer, e.g., "AVAILABLE".
+ * @property {Token[]} tokens
+ * @property {string} rnokpp
  */
 
 /**
@@ -51,6 +54,19 @@ export const VolunteerStatus = {
  * @property {number} id - The unique identifier for the token.
  * @property {string} token - The token string.
  * @property {string} expiryDateTime - The expiration date and time of the token in ISO format.
+ */
+
+/**
+ * @typedef {Object} Address
+ * @property {number} id - The unique identifier for the token.
+ * @property {string} street
+ * @property {string} apartmentNumber
+ * @property {string} buildingNumber
+ * @property {string} city
+ * @property {string} state
+ * @property {string} zipCode
+ * @property {number} latitude
+ * @property {number} longitude
  */
 
 /**
@@ -64,7 +80,7 @@ export const VolunteerStatus = {
  * @typedef {Object} VolunteerProfile
  * @property {number} id - The unique identifier for the volunteer.
  * @property {number} correlationId - The correlation ID associated with the volunteer.
- * @property {number} region - The region code of the volunteer.
+ * @property {number} regionZipCode - The region code of the volunteer.
  * @property {VolunteerStatus} status - The status of the volunteer (e.g., "AVAILABLE").
  * @property {VolunteerContactInfo} volunteerContactInfo - The contact information for the volunteer.
  * @property {string} rnokpp - The RNOKPP (a unique identifier, possibly a national ID or similar).
@@ -124,13 +140,14 @@ export async function deleteVolunteer(id) {
  * @returns {Promise<Page<Volunteer>>}
  */
 export async function getVolunteers(pageable) {
-  const { page = 1, size = 10, sortBy, sortOrder } = pageable;
+  const { page = 1, size = 10, sortBy, sortOrder, filter } = pageable;
 
   const queryParams = new URLSearchParams({
     page,
     size,
     ...(sortBy && { sortBy }),
     ...(sortBy && sortOrder && { sortOrder }),
+    ...(filter && { filter }),
   });
 
   const res = await axiosInstance.get(`${VOLONTEER_PATH}?${queryParams}`);

@@ -9,7 +9,7 @@ import Icon from "../components/Icon";
 import VolunteerDetailsSlideOver from "../components/slide-overs/VolunteerDetailsSlideOver";
 import { fetchVolunteers } from "../features/volunteers/thunks";
 
-const Volunteers = () => {
+const VolunteersPage = () => {
   const dispatch = useDispatch();
   const {
     data: volunteers,
@@ -74,7 +74,7 @@ const Volunteers = () => {
     <>
       <Formik initialValues={{ pageSize: pageable.size }}>
         <Form>
-          <div className="flex flex-col p-8 gap-6">
+          <div className="flex flex-col py-8 gap-6">
             <div className="flex justify-between items-center">
               <h1 className="text-body-900 text-lg font-bold">Добровольці</h1>
             </div>
@@ -104,31 +104,8 @@ const Volunteers = () => {
                     <th className={tableHeaderCellStyle}>
                       <div className="flex gap-2.5 items-center">Ім'я</div>
                     </th>
-                    <th
-                      onClick={() => handleSortChange("correlationId")}
-                      className={tableHeaderCellStyle}
-                    >
-                      <div className="flex gap-2.5 items-center">
-                        ID
-                        {pageable.sortBy === "correlationId" ? (
-                          pageable.sortOrder === "asc" ? (
-                            <Icon
-                              name="SortAsc"
-                              className="w-6 h-6 text-primary-400"
-                            />
-                          ) : (
-                            <Icon
-                              name="SortDesc"
-                              className="w-6 h-6 text-primary-400"
-                            />
-                          )
-                        ) : (
-                          <Icon
-                            name="SortDesc"
-                            className="w-6 h-6 text-primary-100"
-                          />
-                        )}
-                      </div>
+                    <th className={tableHeaderCellStyle}>
+                      <div className="flex gap-2.5 items-center">Локація</div>
                     </th>
                     <th
                       onClick={() => handleSortChange("mobilePhone")}
@@ -189,7 +166,9 @@ const Volunteers = () => {
                           </Button>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          {volunteer.correlationId}
+                          {volunteer.address.state}
+                          {volunteer.address.city &&
+                            `, ${volunteer.address.city}`}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           {volunteer.mobilePhone}
@@ -248,4 +227,4 @@ const Volunteers = () => {
   );
 };
 
-export default Volunteers;
+export default VolunteersPage;
