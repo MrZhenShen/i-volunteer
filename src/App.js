@@ -4,14 +4,7 @@ import { Layout } from "./layouts/Layout";
 
 import { MapPage } from "./pages/MapPage";
 import VolunteersPage from "./pages/VolunteersPage";
-
-function Ev() {
-  return (
-    <div>
-      <h1>Event</h1>
-    </div>
-  );
-}
+import EventsPage from "./pages/EventsPage";
 
 function Analitycs() {
   return (
@@ -27,7 +20,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route path="/volunteers" element={<VolunteersPage />} />
-          <Route path="/events" element={<Ev />} />
+          <Route path="/events" element={<EventsPage />} />
           <Route path="/map" element={<MapPage />} />
           <Route path="/analytics" element={<Analitycs />} />
         </Route>
