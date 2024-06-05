@@ -12,7 +12,7 @@ import InputInline from "../InputInline";
 import { Field, Formik } from "formik";
 import Status from "../Status";
 
-const VolunteerCreateSlideOver = ({ open, setOpen }) => {
+const EventCreateSlideOver = ({ open, setOpen }) => {
   const fieldStyle = "flex items-center";
   const fieldLabelStyle =
     "text-sm text-body-600 sm:w-40 sm:flex-shrink-0 lg:w-44";
@@ -43,7 +43,6 @@ const VolunteerCreateSlideOver = ({ open, setOpen }) => {
                   initialValues={{
                     firstName: "",
                     lastName: "",
-                    birthDate: "",
                     status: "",
                     region: "",
                   }}
@@ -97,19 +96,6 @@ const VolunteerCreateSlideOver = ({ open, setOpen }) => {
                                   size="small"
                                   placeholder="Петренко"
                                   name="lastName"
-                                />
-                              </dd>
-                            </div>
-
-                            <div className={fieldStyle}>
-                              <dt className={fieldLabelStyle}>
-                                Дата народження
-                              </dt>
-                              <dd className={fieldInputStyle}>
-                                <InputInline
-                                  size="small"
-                                  name="birthDate"
-                                  type="date"
                                 />
                               </dd>
                             </div>
@@ -187,4 +173,4 @@ const VolunteerCreateSlideOver = ({ open, setOpen }) => {
   );
 };
 
-export default VolunteerCreateSlideOver;
+export default EventCreateSlideOver;

@@ -77,6 +77,7 @@ const Status = ({
   px-2 py-0.5 rounded-full
   text-sm leading-6 
   transition ease-in-out duration-100
+  select-none
   `;
 
   const statusColor = {
@@ -133,7 +134,7 @@ Status.propTypes = {
   icon: PropTypes.string,
   color: PropTypes.oneOf(["gray", "red", "green"]),
   placeholder: PropTypes.string,
-  onChange: PropTypes.func.isRequired,
+  onChange: PropTypes.func,
 };
 
 export default Status;
