@@ -1,16 +1,46 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Volunteers from "./containers/Volunteers";
-import Events from "./containers/Events";
-import NavigationBar from "./containers/NavigationBar";
+
+import { Layout } from "./layouts/Layout";
+
+import { MapPage } from "./pages/MapPage";
+
+function Vol() {
+  return (
+    <div>
+      <h1>Volunteer</h1>
+    </div>
+  );
+}
+
+function Ev() {
+  return (
+    <div>
+      <h1>Event</h1>
+    </div>
+  );
+}
+
+
+function Analitycs() {
+  return (
+    <div>
+      <h1>Analitycs</h1>
+    </div>
+  );
+}
 
 function App() {
   return (
     <BrowserRouter>
-    <NavigationBar />
       <Routes>
-          <Route path="/volunteers" element={<Volunteers />} />
-          <Route path="/events" element={<Events />} />
+        <Route path="/" element={<Layout />}>
+          <Route path="/volunteers" element={<Vol />} />
+          <Route path="/events" element={<Ev />} />
+          <Route path="/map" element={<MapPage />} />
+          <Route path="/analytics" element={<Analitycs />} />
+        </Route>
       </Routes>
+
     </BrowserRouter>
   );
 }
