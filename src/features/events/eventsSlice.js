@@ -4,7 +4,15 @@ import { reducers, extraReducers } from './reducers';
 
 const initialState = {
   loading: false,
-  data: [],
+  data: {
+    content: [],
+    page: 0,
+    size: 0,
+    totalPages: 0,
+    totalItems: 0,
+    hasNext: false,
+    hasPrevious: false,
+  },
   current: null,
   error: null
 };
