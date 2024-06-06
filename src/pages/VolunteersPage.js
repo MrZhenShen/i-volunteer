@@ -12,7 +12,7 @@ import { fetchVolunteers } from "../features/volunteers/thunks";
 const VolunteersPage = () => {
   const dispatch = useDispatch();
   const {
-    data: volunteers,
+    page: volunteers,
     loading,
     error,
   } = useSelector((state) => state.volunteers);
