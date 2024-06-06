@@ -1,28 +1,28 @@
-import axiosInstance from '../utils/axios';
+import axiosInstance from "../utils/axios";
 
-const EVENTS_PATH = '/events';
+const EVENTS_PATH = "/events";
 
 /**
  * @enum {string}
  */
 export const EventType = {
-    FIRE: "FIRE",
-    FLOOD: "FLOOD",
-    EARTHQUAKE: "EARTHQUAKE",
-    MEDICAL_EMERGENCY: "MEDICAL_EMERGENCY",
-    SEARCH_AND_RESCUE: "SEARCH_AND_RESCUE",
-    NATURAL_DISASTER: "NATURAL_DISASTER",
-    OTHER: "OTHER",
+  FIRE: "FIRE",
+  FLOOD: "FLOOD",
+  EARTHQUAKE: "EARTHQUAKE",
+  MEDICAL_EMERGENCY: "MEDICAL_EMERGENCY",
+  SEARCH_AND_RESCUE: "SEARCH_AND_RESCUE",
+  NATURAL_DISASTER: "NATURAL_DISASTER",
+  OTHER: "OTHER",
 };
 
 /**
  * @enum {string}
-*/
+ */
 export const EventStatus = {
-    CREATED: "CREATED",
-    IN_PROGRESS: "IN_PROGRESS",
-    FINISHED: "FINISHED",
-}
+  CREATED: "CREATED",
+  IN_PROGRESS: "IN_PROGRESS",
+  FINISHED: "FINISHED",
+};
 
 /**
  * @typedef {Object} Pageable
@@ -31,24 +31,21 @@ export const EventStatus = {
  * @property {string} [sortBy] - The field by which list content will be sorted (optional)
  * @property {string} [sortOrder] - The sorting order (optional)
  * @property {string} [filter] - The string by which items are filtered (optional)
- */
-
-/**
- * @typedef {Object} Page<T>
- * @property {T[]} content - The list of entities
- * @property {number} page - The number of page
- * @property {number} size - The max amount of items in page
- * @property {number} totalPages - The total amount of pages might be retrieved
- * @property {number} totalItems - The total amount of item in storage
- * @property {boolean} hasNext - The mark if there might be retrieved next page
- * @property {boolean} hasPrevious - The mark if there might be retrieved previos page
+ * @property {string} [city]
+ * @property {string} [state]
+ * @property {string} [eventType]
+ * @property {string} [date]
  */
 
 /**
  * @typedef {Object} EventRequest
  * @property {number} id - The unique identifier for the event.
  * @property {EventType} eventType - The type of the event.
- * @property {number} regionId - The region code where the event takes place.
+ * @property {string} zipCode
+ * @property {string} street
+ * @property {string} apartmentNumber
+ * @property {string} city
+ * @property {string} state
  * @property {number} latitude - The latitude coordinate of the event location.
  * @property {number} longitude - The longitude coordinate of the event location.
  * @property {string} description - The description of the event.
@@ -57,15 +54,18 @@ export const EventStatus = {
  */
 
 /**
+ * @typedef {Object} UpdateEventStatusRequest
+ * @property {EventStatus} status
+ */
+
+/**
  * @typedef {Object} EventDTO
  * @property {number} id - The unique identifier for the event.
  * @property {EventType} eventType - The type of the event.
- * @property {number} regionId - The region code where the event takes place.
- * @property {number} latitude - The latitude coordinate of the event location.
- * @property {number} longitude - The longitude coordinate of the event location.
+ * @property {import('./shared.facade').Address} address
+ * @property {import('./volunteer.facade').Volunteer[]} volunteers
  * @property {string} description - The description of the event.
  * @property {EventStatus} status - The status of the event.
- * @property {import('./volunteer.facade').VolunteerProfile[]} volunteerProfiles
  */
 
 /**
@@ -117,3 +117,13 @@ export const deleteEvent = async (id) => {
   return response.data;
 };
 
+/**
+ * Update an event by ID
+ * @param {number} id
+ * @param {UpdateEventStatusRequest} data
+ * @return {Promise<EventDTO>}
+ */
+export const updateStatus = async (id, data) => {
+  const response = await axiosInstance.put(`${EVENTS_PATH}/${id}`, data);
+  return response.data;
+};
