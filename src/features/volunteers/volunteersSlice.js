@@ -4,7 +4,8 @@ import { reducers, extraReducers } from "./reducers";
 
 const initialState = {
   loading: false,
-  data: {
+  data: [],
+  page: {
     content: [],
     page: 0,
     size: 0,

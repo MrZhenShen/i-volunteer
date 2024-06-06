@@ -80,6 +80,26 @@ export const VolunteerStatus = {
  */
 
 /**
+ * Returns a list of all volunteer.
+ * @param {Pageable} pageable
+ * @returns {Promise<Page<Volunteer>>}
+ */
+export async function getVolunteers(pageable) {
+  const { page = 1, size = 10, sortBy, sortOrder, filter } = pageable;
+
+  const queryParams = new URLSearchParams({
+    page,
+    size,
+    ...(sortBy && { sortBy }),
+    ...(sortBy && sortOrder && { sortOrder }),
+    ...(filter && { filter }),
+  });
+
+  const res = await axiosInstance.get(`${VOLONTEER_PATH}?${queryParams}`);
+  return res.data;
+}
+
+/**
  * Returns an object representing a Volunteer with detailed information.
  * @param {number} id
  * @returns {Promise<Volunteer>}
@@ -111,26 +131,6 @@ export async function deleteVolunteer(id) {
 }
 
 /**
- * Returns a list of all volunteer.
- * @param {Pageable} pageable
- * @returns {Promise<Page<Volunteer>>}
- */
-export async function getVolunteers(pageable) {
-  const { page = 1, size = 10, sortBy, sortOrder, filter } = pageable;
-
-  const queryParams = new URLSearchParams({
-    page,
-    size,
-    ...(sortBy && { sortBy }),
-    ...(sortBy && sortOrder && { sortOrder }),
-    ...(filter && { filter }),
-  });
-
-  const res = await axiosInstance.get(`${VOLONTEER_PATH}?${queryParams}`);
-  return res.data;
-}
-
-/**
  * Creates a new volunteer.
  * @param {CreateVolunteerRequest} volunteer
  * @returns {Promise<Volunteer>}
@@ -151,11 +151,11 @@ export const getVolunteerProfileById = async (id) => {
 };
 
 /**
- * Finds all volunteers by region ID.
- * @param {number} regionId - The region ID.
+ * Finds all volunteers by zip code.
+ * @param {string} zipCode
  * @returns {Promise<Volunteer[]>} - A promise that resolves to an array of volunteer objects.
  */
-export const findAllVolunteersByRegionId = async (regionId) => {
-  const response = await axiosInstance.get(`${VOLONTEER_PATH}/regions/${regionId}`);
+export const findAllVolunteersByZipCode = async (zipCode) => {
+  const response = await axiosInstance.get(`${VOLONTEER_PATH}/regions/${zipCode}`);
   return response.data;
 };

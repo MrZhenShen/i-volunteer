@@ -9,7 +9,7 @@ export const extraReducers = (builder) => {
     })
     .addCase(thunks.fetchVolunteers.fulfilled, (state, action) => {
       state.loading = false;
-      state.data = action.payload;
+      state.page = action.payload;
     })
     .addCase(thunks.fetchVolunteers.rejected, (state, action) => {
       state.loading = false;

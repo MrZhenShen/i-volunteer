@@ -28,6 +28,6 @@ export const fetchVolunteerProfile = createAsyncThunk(`${VOLUNTEERS}/${PROFILE}/
   return await facade.getVolunteerProfileById(id);
 });
 
-export const fetchVolunteersByRegion = createAsyncThunk(`${VOLUNTEERS}/${FETCH_LIST}`, async (region) => {
-  return await facade.findAllVolunteersByRegionId(region);
+export const fetchVolunteersByZipCode = createAsyncThunk(`${VOLUNTEERS}/${FETCH_LIST}`, async (zipCode) => {
+  return await facade.findAllVolunteersByZipCode(zipCode);
 });
