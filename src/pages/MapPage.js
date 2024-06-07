@@ -3,9 +3,11 @@ import { useState } from 'react';
 import { Menu } from '../components/Menu';
 import Button from "../components/Button";
 import { Map } from "../components/map/Map";
+import LoadingOverlay from '../components/LoadingOverlay';
 
 export function MapPage() {
   const [selected, setSelected] = useState("all");
+  const loading = true;
 
   const filters = [
     { label: "Всі", value: "all", icon: 'Checkmark' },
@@ -25,7 +27,7 @@ export function MapPage() {
         <Menu selected={selected} items={filters} onSelect={setSelected} />
       </div>
 
-      <div className="pt-4 flex-grow">
+      <div className="relative pt-4 flex-grow">
         <Map
           markers={[
             {
@@ -42,6 +44,7 @@ export function MapPage() {
             }
           ]} />
       </div>
+      {loading && <LoadingOverlay />}
     </>
   );
 }
