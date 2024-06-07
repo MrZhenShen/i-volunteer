@@ -7,7 +7,7 @@ export function Layout() {
     <div className="flex flex-col h-screen justify-between">
       <NavigationBar />
 
-      <main className="flex flex-col justify-between h-[calc(100dvh-88px-64px-32px)] container mx-auto flex-grow">
+      <main className="relative flex flex-col justify-between h-[calc(100dvh-88px-64px-32px)] container mx-auto flex-grow">
         <Outlet />
       </main>
 
