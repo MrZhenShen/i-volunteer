@@ -8,10 +8,14 @@ import {
 } from "@headlessui/react";
 import Icon from "../../components/Icon";
 import Status from "../../components/Status";
-import { EventTypeDetails } from "../../api/events.facade";
+import { EventStatusDetails, EventTypeDetails } from "../../api/events.facade";
 import { Map } from "../../components/map/Map";
+import { useDispatch } from "react-redux";
+import { updateEvent } from "../../features/events/thunks";
 
 const EventCreateSlideOver = ({ open, setOpen, event }) => {
+  const dispatch = useDispatch();
+
   const fieldStyle = "flex items-center";
   const fieldLabelStyle =
     "text-sm text-body-600 sm:w-40 sm:flex-shrink-0 lg:w-44";
@@ -20,6 +24,19 @@ const EventCreateSlideOver = ({ open, setOpen, event }) => {
   const eventType = {
     value: event.eventType,
     label: EventTypeDetails[event.eventType].text,
+  };
+
+  const eventStatusOptions = Object.keys(EventStatusDetails).map((key) => ({
+    value: key,
+    label: EventStatusDetails[key].text,
+  }));
+
+  const handleUpdate = async (status) => {
+    try {
+      await dispatch(updateEvent(event.id, {status: status})).unwrap();
+    } catch (error) {
+      console.error("Failed to update event:", error);
+    }
   };
 
   return (
@@ -85,6 +102,20 @@ const EventCreateSlideOver = ({ open, setOpen, event }) => {
                             </dd>
                           </div>
                         )}
+
+                        <div className={fieldStyle}>
+                          <dt className={fieldLabelStyle}>Статус</dt>
+                          <dd className={fieldValueStyle}>
+                            <Status
+                              value={event.status}
+                              options={eventStatusOptions}
+                              placeholder={
+                                EventStatusDetails[event.status].text
+                              }
+                              onChange={(e) => handleUpdate(e.target.value)}
+                            />
+                          </dd>
+                        </div>
 
                         {/* Опис - description */}
                         <div className={fieldStyle}>
