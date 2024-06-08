@@ -160,7 +160,10 @@ const EventCreateSlideOver = ({ open, setOpen, event }) => {
                           </dt>
                           <div className="flex flex-col gap-4">
                             {event.volunteers.map((volunteer) => (
-                              <div className="flex flex-col gap-2 w-full border-primary-100 border-b pb-4">
+                              <div
+                                key={volunteer.id}
+                                className="flex flex-col gap-2 w-full border-primary-100 border-b pb-4"
+                              >
                                 <dd className="text-md text-body-900 select-all">
                                   {volunteer.firstName} {volunteer.lastName}
                                 </dd>

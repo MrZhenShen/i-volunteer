@@ -8,11 +8,13 @@ import Status from "../components/Status";
 import Icon from "../components/Icon";
 import VolunteerDetailsSlideOver from "../containers/slide-overs/VolunteerDetailsSlideOver";
 import { fetchVolunteers } from "../features/volunteers/thunks";
+import { VolunteerStatusDetails } from "../api/volunteer.facade";
 
 const VolunteersPage = () => {
   const dispatch = useDispatch();
   const {
-    page: volunteers,
+    data: volunteers,
+    pageDetails,
     loading,
     error,
   } = useSelector((state) => state.volunteers);
@@ -63,7 +65,7 @@ const VolunteersPage = () => {
     { value: "20", label: "20" },
     { value: "50", label: "50" },
     { value: "100", label: "100" },
-    { value: `${volunteers.totalItems}`, label: "Усі" },
+    { value: `${pageDetails.totalItems}`, label: "Усі" },
   ];
 
   return (
@@ -76,8 +78,7 @@ const VolunteersPage = () => {
             </div>
             <div className="flex justify-between items-center">
               <div className="text-sm text-body-600">
-                Відображено {volunteers.content.length} із{" "}
-                {volunteers.totalItems}
+                Відображено {volunteers.length} із {pageDetails.totalItems}
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-sm text-body-900">
@@ -151,62 +152,47 @@ const VolunteersPage = () => {
                       </td>
                     </tr>
                   ) : (
-                    volunteers.content.map((volunteer) => (
-                      <tr key={volunteer.id}>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <Button
-                            variant="link"
-                            onClick={() => handleOpenSlideOver(volunteer)}
-                          >
-                            {volunteer.firstName} {volunteer.lastName}
-                          </Button>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          {volunteer.address.state}
-                          {volunteer.address.city &&
-                            `, ${volunteer.address.city}`}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          {volunteer.mobilePhone}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          {volunteer.status === "AVAILABLE" ? (
+                    volunteers.map((volunteer) => {
+                      const { text: statusText, color: statusColor } =
+                        VolunteerStatusDetails[volunteer.status];
+
+                      return (
+                        <tr key={volunteer.id}>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <Button
+                              variant="link"
+                              onClick={() => handleOpenSlideOver(volunteer)}
+                            >
+                              {volunteer.firstName} {volunteer.lastName}
+                            </Button>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            {volunteer.address.state}
+                            {volunteer.address.city &&
+                              `, ${volunteer.address.city}`}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            {volunteer.mobilePhone}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
                             <Status
-                              placeholder="Активний"
-                              value="Активний"
-                              color="green"
+                              placeholder={statusText}
+                              value={statusText}
+                              color={statusColor}
                             />
-                          ) : volunteer.status === "UNAVAILABLE" ? (
-                            <Status
-                              placeholder="Неактивний"
-                              value="Неактивний"
-                              color="gray"
-                            />
-                          ) : volunteer.status === "ATTENDING_EVENT" ? (
-                            <Status
-                              placeholder="Залучений"
-                              value="Залучений"
-                              color="red"
-                            />
-                          ) : (
-                            <Status
-                              placeholder="В дорозі"
-                              value="В дорозі"
-                              color="green"
-                            />
-                          )}
-                        </td>
-                      </tr>
-                    ))
+                          </td>
+                        </tr>
+                      );
+                    })
                   )}
                 </tbody>
               </table>
             </div>
             <Pagination
-              hasPrevious={volunteers.hasPrevious}
-              hasNext={volunteers.hasNext}
-              currentPage={volunteers.page}
-              totalPages={volunteers.totalPages}
+              hasPrevious={pageDetails.hasPrevious}
+              hasNext={pageDetails.hasNext}
+              currentPage={pageDetails.page}
+              totalPages={pageDetails.totalPages}
               onPageChange={handlePageChange}
             />
           </div>

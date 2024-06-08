@@ -13,6 +13,14 @@ export const VolunteerStatus = {
   REQUESTED: "REQUESTED",
 };
 
+export const VolunteerStatusDetails = {
+  [VolunteerStatus.AVAILABLE]: { text: "Активний", color: "green" },
+  [VolunteerStatus.UNAVAILABLE]: { text: "Неактивний", color: "gray" },
+  [VolunteerStatus.ATTENDING_EVENT]: { text: "Залучений", color: "red" },
+  [VolunteerStatus.EN_ROUTE_TO_EVENT]: { text: "В дорозі", color: "green" },
+  [VolunteerStatus.REQUESTED]: { text: "Запитано", color: "red" },
+};
+
 /**
  * @typedef {Object} Pageable
  * @property {number} page - The number of page (required)

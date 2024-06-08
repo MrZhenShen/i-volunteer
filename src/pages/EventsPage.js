@@ -11,9 +11,14 @@ import Select from "../components/Select";
 import EventCreateSlideOver from "../containers/slide-overs/EventCreateSlideOver";
 import EventDetailsSlideOver from "../containers/slide-overs/EventDetailsSlideOver";
 
-const Events = () => {
+const EventsPage = () => {
   const dispatch = useDispatch();
-  const { data: events, pageDetails, loading, error } = useSelector((state) => state.events);
+  const {
+    data: events,
+    pageDetails,
+    loading,
+    error,
+  } = useSelector((state) => state.events);
 
   const tableHeaderCellStyle =
     "px-6 py-3 text-left text-base font-medium text-body-900 tracking-wider cursor-pointer";
@@ -63,7 +68,7 @@ const Events = () => {
     { value: "20", label: "20" },
     { value: "50", label: "50" },
     { value: "100", label: "100" },
-    { value: `${events.totalItems}`, label: "Усі" },
+    { value: `${pageDetails.totalItems}`, label: "Усі" },
   ];
 
   return (
@@ -242,4 +247,4 @@ const Events = () => {
   );
 };
 
-export default Events;
+export default EventsPage;
