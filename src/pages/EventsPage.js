@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from "react";
+import { Form, Formik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchEvents } from "../features/events/thunks";
+import { EventStatusDetails, EventTypeDetails } from "../api/events.facade";
 import Pagination from "../components/Pagination";
 import Status from "../components/Status";
 import Icon from "../components/Icon";
-import { Form, Formik } from "formik";
-import { Button, Select } from "@headlessui/react";
-import EventCreateSlideOver from "../components/slide-overs/EventCreateSlideOver";
-import EventDetailsSlideOver from "../components/slide-overs/EventDetailsSlideOver";
+import Button from "../components/Button";
+import Select from "../components/Select";
+import EventCreateSlideOver from "../containers/slide-overs/EventCreateSlideOver";
+import EventDetailsSlideOver from "../containers/slide-overs/EventDetailsSlideOver";
 
 const Events = () => {
   const dispatch = useDispatch();
-  const { data: events, loading, error } = useSelector((state) => state.events);
+  const { data: events, pageDetails, loading, error } = useSelector((state) => state.events);
 
   const tableHeaderCellStyle =
     "px-6 py-3 text-left text-base font-medium text-body-900 tracking-wider cursor-pointer";
@@ -46,13 +48,9 @@ const Events = () => {
     useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
 
-  const handleOpenSlideOver = (volunteer) => {
-    setSelectedEvent(volunteer);
+  const handleOpenSlideOver = (event) => {
+    setSelectedEvent(event);
     setIsEventDetailsSlideOverOpen(true);
-  };
-
-  const handleFilterChange = (event) => {
-    setPageable((prev) => ({ ...prev, filter: event.target.value, page: 1 }));
   };
 
   const handlePageSizeChange = (event) => {
@@ -72,7 +70,7 @@ const Events = () => {
     <>
       <Formik initialValues={{ pageSize: pageable.size }}>
         <Form>
-          <div className="flex flex-col p-8 gap-6">
+          <div className="flex flex-col py-8 gap-6">
             <div className="flex justify-between items-center">
               <h1 className="text-body-900 text-lg font-bold">Події</h1>
               <Button
@@ -85,8 +83,7 @@ const Events = () => {
             </div>
             <div className="flex justify-between items-center">
               <div className="text-sm text-body-600">
-                Відображено {events.content.length} із{" "}
-                {events.totalItems}
+                Відображено {events.length} із {pageDetails.totalItems}
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-sm text-body-900">
@@ -106,16 +103,13 @@ const Events = () => {
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-body-50">
                   <tr>
-                    <th className={tableHeaderCellStyle}>
-                      <div className="flex gap-2.5 items-center">Ім'я</div>
-                    </th>
                     <th
-                      onClick={() => handleSortChange("id")}
+                      onClick={() => handleSortChange("eventType")}
                       className={tableHeaderCellStyle}
                     >
                       <div className="flex gap-2.5 items-center">
-                        ID
-                        {pageable.sortBy === "id" ? (
+                        Тип події
+                        {pageable.sortBy === "eventType" ? (
                           pageable.sortOrder === "asc" ? (
                             <Icon
                               name="SortAsc"
@@ -135,11 +129,8 @@ const Events = () => {
                         )}
                       </div>
                     </th>
-                    <th
-                      onClick={() => handleSortChange("mobilePhone")}
-                      className={tableHeaderCellStyle}
-                    >
-                      Тел
+                    <th className={tableHeaderCellStyle}>
+                      <div className="flex gap-2.5 items-center">Адреса</div>
                     </th>
                     <th
                       onClick={() => handleSortChange("status")}
@@ -167,6 +158,9 @@ const Events = () => {
                         )}
                       </div>
                     </th>
+                    <th className={tableHeaderCellStyle}>
+                      <div className="flex gap-2.5 items-center">Залучено</div>
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
@@ -183,60 +177,50 @@ const Events = () => {
                       </td>
                     </tr>
                   ) : (
-                    events.content.map((event) => (
-                      <tr key={event.id}>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <Button
-                            variant="link"
-                            onClick={() => handleOpenSlideOver(event)}
-                          >
-                            {event.firstName} {event.lastName}
-                          </Button>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          {event.id}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          {event.mobilePhone}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          {event.status === "AVAILABLE" ? (
+                    events.map((event) => {
+                      const { text: statusText, color: statusColor } =
+                        EventStatusDetails[event.status];
+                      const { city, street, buildingNumber, apartmentNumber } =
+                        event.address;
+
+                      return (
+                        <tr key={event.id}>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <Button
+                              variant="link"
+                              onClick={() => handleOpenSlideOver(event)}
+                            >
+                              {EventTypeDetails[event.eventType].text}
+                            </Button>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            {city}
+                            {street && `, ${street}`}
+                            {buildingNumber && `, ${buildingNumber}`}
+                            {apartmentNumber && `, кв. ${apartmentNumber}`}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
                             <Status
-                              placeholder="Активний"
-                              value="Активний"
-                              color="green"
+                              placeholder={statusText}
+                              value={statusText}
+                              color={statusColor}
                             />
-                          ) : event.status === "UNAVAILABLE" ? (
-                            <Status
-                              placeholder="Неактивний"
-                              value="Неактивний"
-                              color="gray"
-                            />
-                          ) : event.status === "ATTENDING_EVENT" ? (
-                            <Status
-                              placeholder="Залучений"
-                              value="Залучений"
-                              color="red"
-                            />
-                          ) : (
-                            <Status
-                              placeholder="В дорозі"
-                              value="В дорозі"
-                              color="green"
-                            />
-                          )}
-                        </td>
-                      </tr>
-                    ))
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            {event.volunteers.length}
+                          </td>
+                        </tr>
+                      );
+                    })
                   )}
                 </tbody>
               </table>
             </div>
             <Pagination
-              hasPrevious={events.hasPrevious}
-              hasNext={events.hasNext}
-              currentPage={events.page}
-              totalPages={events.totalPages}
+              hasPrevious={pageDetails.hasPrevious}
+              hasNext={pageDetails.hasNext}
+              currentPage={pageDetails.page}
+              totalPages={pageDetails.totalPages}
               onPageChange={handlePageChange}
             />
           </div>

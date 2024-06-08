@@ -6,7 +6,7 @@ import { Form, Formik } from "formik";
 import Pagination from "../components/Pagination";
 import Status from "../components/Status";
 import Icon from "../components/Icon";
-import VolunteerDetailsSlideOver from "../components/slide-overs/VolunteerDetailsSlideOver";
+import VolunteerDetailsSlideOver from "../containers/slide-overs/VolunteerDetailsSlideOver";
 import { fetchVolunteers } from "../features/volunteers/thunks";
 
 const VolunteersPage = () => {
@@ -51,10 +51,6 @@ const VolunteersPage = () => {
   const handleOpenSlideOver = (volunteer) => {
     setSelectedVolunteer(volunteer);
     setIsVolunteerDetailsSlideOverOpen(true);
-  };
-
-  const handleFilterChange = (event) => {
-    setPageable((prev) => ({ ...prev, filter: event.target.value, page: 1 }));
   };
 
   const handlePageSizeChange = (event) => {
