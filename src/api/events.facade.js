@@ -15,6 +15,16 @@ export const EventType = {
   OTHER: "OTHER",
 };
 
+export const EventTypeDetails = {
+  [EventType.FIRE]: { text: "Пожежа" },
+  [EventType.FLOOD]: { text: "Повінь" },
+  [EventType.EARTHQUAKE]: { text: "Землетрус" },
+  [EventType.MEDICAL_EMERGENCY]: { text: "Медична невідкладна допомога" },
+  [EventType.SEARCH_AND_RESCUE]: { text: "Пошук і рятування" },
+  [EventType.NATURAL_DISASTER]: { text: "Природна катастрофа" },
+  [EventType.OTHER]: { text: "Інше" },
+};
+
 /**
  * @enum {string}
  */
@@ -22,6 +32,12 @@ export const EventStatus = {
   CREATED: "CREATED",
   IN_PROGRESS: "IN_PROGRESS",
   FINISHED: "FINISHED",
+};
+
+export const EventStatusDetails = {
+  [EventStatus.CREATED]: { text: "Створено", color: "green" },
+  [EventStatus.IN_PROGRESS]: { text: "Триває", color: "red" },
+  [EventStatus.FINISHED]: { text: "Завершено", color: "gray" },
 };
 
 /**
