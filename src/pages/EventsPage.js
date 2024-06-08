@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Form, Formik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchEvents } from "../features/events/thunks";
@@ -26,42 +26,23 @@ const EventsPage = () => {
   const [pageable, setPageable] = useState({
     page: 1,
     size: 10,
-    sortBy: "",
-    sortOrder: "",
-    filter: "",
+    sortBy: null,
+    sortOrder: null,
+    filter: null,
   });
 
   useEffect(() => {
     dispatch(fetchEvents(pageable));
   }, [dispatch, pageable]);
 
-  const handlePageChange = (newPage) => {
+  const handlePageChange = useCallback((newPage) => {
     setPageable((prev) => ({ ...prev, page: newPage }));
-  };
+  }, []);
 
-  const handleSortChange = (field) => {
-    setPageable((prev) => ({
-      ...prev,
-      sortBy: field,
-      sortOrder: prev.sortOrder === "asc" ? "desc" : "asc",
-    }));
-  };
-
-  const [isEventCreateSlideOverOpen, setIsEventCreateSlideOverOpen] =
-    useState(false);
-  const [isEventDetailsSlideOverOpen, setIsEventDetailsSlideOverOpen] =
-    useState(false);
-  const [selectedEvent, setSelectedEvent] = useState(null);
-
-  const handleOpenSlideOver = (event) => {
-    setSelectedEvent(event);
-    setIsEventDetailsSlideOverOpen(true);
-  };
-
-  const handlePageSizeChange = (event) => {
+  const handlePageSizeChange = useCallback((event) => {
     const newSize = Number(event.target.value);
     setPageable((prev) => ({ ...prev, size: newSize, page: 1 }));
-  };
+  }, []);
 
   const pageSizeOptions = [
     { value: "10", label: "10" },
@@ -70,6 +51,25 @@ const EventsPage = () => {
     { value: "100", label: "100" },
     { value: `${pageDetails.totalItems}`, label: "Усі" },
   ];
+
+  const handleSortChange = useCallback((field) => {
+    setPageable((prev) => ({
+      ...prev,
+      sortBy: field,
+      sortOrder: prev.sortOrder === "asc" ? "desc" : "asc",
+    }));
+  }, []);
+
+  const [isEventCreateSlideOverOpen, setIsEventCreateSlideOverOpen] =
+    useState(false);
+  const [isEventDetailsSlideOverOpen, setIsEventDetailsSlideOverOpen] =
+    useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+
+  const handleOpenSlideOver = useCallback((event) => {
+    setSelectedEvent(event);
+    setIsEventDetailsSlideOverOpen(true);
+  }, []);
 
   return (
     <>
