@@ -13,6 +13,7 @@ import startOfMonth from 'date-fns/startOfMonth';
 import endOfMonth from 'date-fns/endOfMonth';
 import addMonths from 'date-fns/addMonths';
 
+
 const predefinedRanges = [
   {
     label: 'Сьогодні',
@@ -131,6 +132,27 @@ const locale = {
 };
 
 const { afterToday } = DateRangePicker;
+
+
+/**
+ * DateRange component that renders a date range picker with predefined ranges and locale settings.
+ *
+ * @component
+ * @param {Object} props - The props object.
+ * @returns {JSX.Element} The rendered date range picker component.
+ *
+ * @example
+ * // Example usage:
+ * import DateRange from './components/DateRange';
+ *
+ * function App() {
+ *   return (
+ *     <div>
+ *       <DateRange />
+ *     </div>
+ *   );
+ * }
+ */
 
 class DateRange extends Component {
   
