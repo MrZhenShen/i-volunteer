@@ -183,6 +183,7 @@ const EventsPage = () => {
                     </tr>
                   ) : (
                     events.map((event) => {
+                      const { text: type } = EventTypeDetails[event.eventType];
                       const { text: statusText, color: statusColor } =
                         EventStatusDetails[event.status];
                       const { city, street, buildingNumber, apartmentNumber } =
@@ -195,7 +196,7 @@ const EventsPage = () => {
                               variant="link"
                               onClick={() => handleOpenSlideOver(event)}
                             >
-                              {EventTypeDetails[event.eventType].text}
+                              {type}
                             </Button>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">

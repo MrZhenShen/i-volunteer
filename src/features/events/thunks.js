@@ -16,8 +16,8 @@ export const fetchEvent = createAsyncThunk(`${EVENTS}/${FETCH}`, async (id) => {
   return await facade.getEventById(id);
 });
 
-export const updateEvent = createAsyncThunk(`${EVENTS}/${PUT}`, async (id, updateModel) => {
-  return await facade.updateStatus(id, updateModel);
+export const updateEvent = createAsyncThunk(`${EVENTS}/${PUT}`, async (data) => {
+  return await facade.updateStatus(data);
 });
 
 export const deleteEvent = createAsyncThunk(`${EVENTS}/${DELETE}`, async (id) => {

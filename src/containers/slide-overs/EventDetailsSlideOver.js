@@ -33,7 +33,8 @@ const EventCreateSlideOver = ({ open, setOpen, event }) => {
 
   const handleUpdate = async (status) => {
     try {
-      await dispatch(updateEvent(event.id, {status: status})).unwrap();
+      await dispatch(updateEvent({ id: event.id, updateModel: { status: status } })).unwrap();
+      setOpen(false);
     } catch (error) {
       console.error("Failed to update event:", error);
     }

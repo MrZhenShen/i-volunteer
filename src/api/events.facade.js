@@ -139,7 +139,7 @@ export const deleteEvent = async (id) => {
  * @param {UpdateEventStatusRequest} data
  * @return {Promise<EventDTO>}
  */
-export const updateStatus = async (id, data) => {
-  const response = await axiosInstance.put(`${EVENTS_PATH}/${id}`, data);
+export const updateStatus = async (data) => {
+  const response = await axiosInstance.put(`${EVENTS_PATH}/${data.id}/status`, data.updateModel);
   return response.data;
 };
