@@ -1,16 +1,22 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {};
+const initialState = {
+  lat: null,
+  lng: null,
+};
 
-export const eventsSlice = createSlice({
-  name: 'MAP_EVENTS',
+export const mapSlice = createSlice({
+  name: "MAP_EVENTS",
   initialState,
   reducers: {
-    click: () => {},
+    click: (state, action) => {
+      state.lat = action.payload.lat;
+      state.lng = action.payload.lng;
+    },
     markerClick: () => {},
   },
 });
 
-export const actions = eventsSlice.actions
+export const actions = mapSlice.actions;
 
-export default eventsSlice.reducer
+export default mapSlice.reducer;
