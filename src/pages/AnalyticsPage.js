@@ -12,6 +12,7 @@ const AnalyticsPage = () => {
         <h1 className="text-body-900 text-lg font-bold">Аналітика</h1>
       </div>
       <div className="flex relative py-6">
+
           <DateRange />
       </div>
       <div className="flex-grow relative pt-2 w-1/2">
