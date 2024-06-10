@@ -5,14 +5,7 @@ import { Layout } from "./layouts/Layout";
 import { MapPage } from "./pages/MapPage";
 import VolunteersPage from "./pages/VolunteersPage";
 import EventsPage from "./pages/EventsPage";
-
-function Analitycs() {
-  return (
-    <div>
-      <h1>Analitycs</h1>
-    </div>
-  );
-}
+import AnalyticsPage from './pages/AnalyticsPage';
 
 function App() {
   return (
@@ -22,7 +15,7 @@ function App() {
           <Route path="/volunteers" element={<VolunteersPage />} />
           <Route path="/events" element={<EventsPage />} />
           <Route path="/map" element={<MapPage />} />
-          <Route path="/analytics" element={<Analitycs />} />
+          <Route path="/analytics" element={<AnalyticsPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
