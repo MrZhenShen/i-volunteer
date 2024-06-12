@@ -9,6 +9,7 @@ import Icon from "../components/Icon";
 import VolunteerDetailsSlideOver from "../containers/slide-overs/VolunteerDetailsSlideOver";
 import { fetchVolunteers } from "../features/volunteers/thunks";
 import { VolunteerStatusDetails } from "../api/volunteer.facade";
+import VolunteerInfoSlideOver from "../features/volunteers/components/VolunteerInfoSlideOver";
 
 const VolunteersPage = () => {
   const dispatch = useDispatch();
@@ -201,11 +202,10 @@ const VolunteersPage = () => {
         </Form>
       </Formik>
       {selectedVolunteer && (
-        <VolunteerDetailsSlideOver
-          open={isVolunteerDetailsSlideOverOpen}
-          setOpen={setIsVolunteerDetailsSlideOverOpen}
+        <VolunteerInfoSlideOver
           volunteer={selectedVolunteer}
-        />
+          isOpen={isVolunteerDetailsSlideOverOpen}
+          toggle={() => setIsVolunteerDetailsSlideOverOpen(!isVolunteerDetailsSlideOverOpen)} />
       )}
     </>
   );
