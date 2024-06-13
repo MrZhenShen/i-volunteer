@@ -40,6 +40,7 @@ function VolunteerInfoSlideOver({ isOpen, toggle, volunteer }) {
 
           <div className="h-80 mb-6">
             <Map
+              center={[volunteer.longitude, volunteer.latitude]}
               markers={[
                 {
                   id: volunteer.id,
