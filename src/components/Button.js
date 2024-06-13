@@ -50,7 +50,8 @@ const Button = ({
     primary:
       "bg-primary-500 text-primary-0 " +
       "hover:bg-primary-400 " +
-      "active:bg-primary-700 ",
+      "active:bg-primary-700 " +
+      "disabled:bg-primary-200 ",
     secondary:
       "bg-primary-50 text-primary-400 " +
       "hover:bg-body-50 " +

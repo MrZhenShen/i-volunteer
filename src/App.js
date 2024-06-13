@@ -4,15 +4,8 @@ import { Layout } from "./layouts/Layout";
 
 import { MapPage } from "./pages/MapPage";
 import VolunteersPage from "./pages/VolunteersPage";
+import EventsPage from "./pages/EventsPage";
 import AnalyticsPage from './pages/AnalyticsPage';
-
-function Ev() {
-  return (
-    <div>
-      <h1>Event</h1>
-    </div>
-  );
-}
 
 function App() {
   return (
@@ -20,7 +13,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route path="/volunteers" element={<VolunteersPage />} />
-          <Route path="/events" element={<Ev />} />
+          <Route path="/events" element={<EventsPage />} />
           <Route path="/map" element={<MapPage />} />
           <Route path="/analytics" element={<AnalyticsPage />} />
         </Route>

@@ -1,4 +1,4 @@
-import * as thunks from './thunks';
+import * as thunks from "./thunks";
 
 export const reducers = {};
 
@@ -9,7 +9,9 @@ export const extraReducers = (builder) => {
     })
     .addCase(thunks.fetchEvents.fulfilled, (state, action) => {
       state.loading = false;
-      state.data = action.payload;
+      const { content, ...pageDetails } = action.payload;
+      state.data = content;
+      state.pageDetails = pageDetails;
     })
     .addCase(thunks.fetchEvents.rejected, (state, action) => {
       state.loading = false;
@@ -25,6 +27,24 @@ export const extraReducers = (builder) => {
       state.data.push(action.payload);
     })
     .addCase(thunks.createEvent.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message;
+    });
+
+  builder
+    .addCase(thunks.updateEvent.pending, (state) => {
+      state.loading = true;
+    })
+    .addCase(thunks.updateEvent.fulfilled, (state, action) => {
+      state.loading = false;
+      state.data = state.data.map((event) => {
+        if (event.id === action.payload.id) {
+          return action.payload;
+        }
+        return event;
+      });
+    })
+    .addCase(thunks.updateEvent.rejected, (state, action) => {
       state.loading = false;
       state.error = action.error.message;
     });
@@ -54,4 +74,4 @@ export const extraReducers = (builder) => {
       state.loading = false;
       state.error = action.error.message;
     });
-}
+};

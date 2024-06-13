@@ -6,9 +6,9 @@ import {
   Transition,
   TransitionChild,
 } from "@headlessui/react";
-import Icon from "../Icon";
-import Status from "../Status";
-import { Map } from "../map/Map";
+import Icon from "../../components/Icon";
+import Status from "../../components/Status";
+import { Map } from "../../components/map/Map";
 
 const VolunteerDetailsSlideOver = ({ open, setOpen, volunteer }) => {
   const fieldStyle = "flex";

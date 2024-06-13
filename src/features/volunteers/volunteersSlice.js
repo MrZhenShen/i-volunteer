@@ -5,8 +5,7 @@ import { reducers, extraReducers } from "./reducers";
 const initialState = {
   loading: false,
   data: [],
-  page: {
-    content: [],
+  pageDetails: {
     page: 0,
     size: 0,
     totalPages: 0,

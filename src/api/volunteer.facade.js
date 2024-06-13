@@ -13,6 +13,14 @@ export const VolunteerStatus = {
   REQUESTED: "REQUESTED",
 };
 
+export const VolunteerStatusDetails = {
+  [VolunteerStatus.AVAILABLE]: { text: "Активний", color: "green" },
+  [VolunteerStatus.UNAVAILABLE]: { text: "Неактивний", color: "gray" },
+  [VolunteerStatus.ATTENDING_EVENT]: { text: "Залучений", color: "red" },
+  [VolunteerStatus.EN_ROUTE_TO_EVENT]: { text: "В дорозі", color: "green" },
+  [VolunteerStatus.REQUESTED]: { text: "Запитано", color: "red" },
+};
+
 /**
  * @typedef {Object} Pageable
  * @property {number} page - The number of page (required)
@@ -23,24 +31,13 @@ export const VolunteerStatus = {
  */
 
 /**
- * @typedef {Object} Page<T>
- * @property {T[]} content - The list of entities
- * @property {number} page - The number of page
- * @property {number} size - The max amount of items in page
- * @property {number} totalPages - The total amount of pages might be retrieved
- * @property {number} totalItems - The total amount of item in storage
- * @property {boolean} hasNext - The mark if there might be retrieved next page
- * @property {boolean} hasPrevious - The mark if there might be retrieved previos page
- */
-
-/**
  * @typedef {Object} Volunteer
  * @property {number} id - The unique identifier for the Volunteer.
  * @property {number} correlationId - The correlation ID associated with the Volunteer.
  * @property {string} firstName - The first name of the Volunteer.
  * @property {string} lastName - The last name of the Volunteer.
  * @property {string} mobilePhone - The mobile phone number of the Volunteer.
- * @property {Address} address
+ * @property {import('./shared.facade').Address} address
  * @property {string} birthDate
  * @property {number} latitude - The latitude coordinate of the Volunteer's location.
  * @property {number} longitude - The longitude coordinate of the Volunteer's location.
@@ -54,19 +51,6 @@ export const VolunteerStatus = {
  * @property {number} id - The unique identifier for the token.
  * @property {string} token - The token string.
  * @property {string} expiryDateTime - The expiration date and time of the token in ISO format.
- */
-
-/**
- * @typedef {Object} Address
- * @property {number} id - The unique identifier for the token.
- * @property {string} street
- * @property {string} apartmentNumber
- * @property {string} buildingNumber
- * @property {string} city
- * @property {string} state
- * @property {string} zipCode
- * @property {number} latitude
- * @property {number} longitude
  */
 
 /**
