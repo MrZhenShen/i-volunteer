@@ -71,11 +71,13 @@ const EventsPage = () => {
     setIsEventDetailsSlideOverOpen(true);
   }, []);
 
+  const tbodyCellStyle = "px-6 py-4 whitespace-nowrap z-1";
+
   return (
     <>
       <Formik initialValues={{ pageSize: pageable.size }}>
-        <Form>
-          <div className="flex flex-col py-8 gap-6">
+        <Form className="h-full overflow-hidden">
+          <div className="flex flex-col h-full overflow-hidden pt-8 gap-6">
             <div className="flex justify-between items-center">
               <h1 className="text-body-900 text-lg font-bold">Події</h1>
               <Button
@@ -104,9 +106,9 @@ const EventsPage = () => {
               </div>
             </div>
 
-            <div className="overflow-hidden rounded-md">
+            <div className="overflow-auto rounded-md">
               <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-body-50">
+                <thead className="bg-body-50/70 backdrop-blur-sm sticky top-0 z-10">
                   <tr>
                     <th
                       onClick={() => handleSortChange("eventType")}
@@ -191,7 +193,7 @@ const EventsPage = () => {
 
                       return (
                         <tr key={event.id}>
-                          <td className="px-6 py-4 whitespace-nowrap">
+                          <td className={tbodyCellStyle}>
                             <Button
                               variant="link"
                               onClick={() => handleOpenSlideOver(event)}
@@ -199,20 +201,20 @@ const EventsPage = () => {
                               {type}
                             </Button>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
+                          <td className={tbodyCellStyle}>
                             {city}
                             {street && `, ${street}`}
                             {buildingNumber && `, ${buildingNumber}`}
                             {apartmentNumber && `, кв. ${apartmentNumber}`}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
+                          <td className={tbodyCellStyle}>
                             <Status
                               placeholder={statusText}
                               value={statusText}
                               color={statusColor}
                             />
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
+                          <td className={tbodyCellStyle}>
                             {event.volunteers.length}
                           </td>
                         </tr>
