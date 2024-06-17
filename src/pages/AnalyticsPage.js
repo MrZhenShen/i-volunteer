@@ -4,11 +4,12 @@ import { Map } from '../components/map/Map';
 import DateRange from '../components/DateRange';
 import LoadingOverlay from '../components/LoadingOverlay';
 import { fetchEvents } from '../features/events/thunks';
-import { AreaChart, Area, LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
 const AnalyticsPage = () => {
   const dispatch = useDispatch();
-  const { data: events, loading } = useSelector((state) => state.events);
+  const { data: events, loading, error } = useSelector((state) => state.events);
+
   const [dateRange, setDateRange] = useState({ startDate: '2024-06-01', endDate: '2024-06-10' }); // For testing, use fixed date range
   const [eventCounts, setEventCounts] = useState({
     activeEvents: 0,
@@ -22,34 +23,63 @@ const AnalyticsPage = () => {
   });
   const [dailyEventCounts, setDailyEventCounts] = useState([]);
 
-  // Mock data for testing
-  const mockEvents = [
-    { id: 1, eventType: 'type1', date: '2024-06-01', status: 'active', volunteers: [2, 3, 4], latitude: 49.841082, longitude: 24.030533 },
-    { id: 2, eventType: 'type1', date: '2024-06-02', status: 'active', volunteers: [2, 3, 4], latitude: 49.841082, longitude: 24.030533 },
-    { id: 3, eventType: 'type1', date: '2024-06-05', status: 'active', volunteers: [2, 3, 4], latitude: 49.841082, longitude: 24.030533 },
-    { id: 4, eventType: 'type1', date: '2024-06-05', status: 'active', volunteers: [2, 3, 4], latitude: 49.841082, longitude: 24.030533 },
-    { id: 5, eventType: 'type1', date: '2024-06-05', status: 'active', volunteers: [2, 3, 4], latitude: 49.841082, longitude: 24.030533 },
-    { id: 6, eventType: 'type2', date: '2024-06-09', status: 'active', volunteers: [2, 3, 4], latitude: 49.842082, longitude: 24.031533 },
-    { id: 7, eventType: 'type3', date: '2024-06-10', status: 'active', volunteers: [2, 3, 4], latitude: 49.843082, longitude: 24.032533 },
-    { id: 8, eventType: 'type4', date: '2024-06-10', status: 'active', volunteers: [1, 8, 3], latitude: 49.844082, longitude: 24.033533 },
-    // Add more mock events as needed
-  ];
 
   useEffect(() => {
+    console.log('Events updated ---- :', events);
+/*     if (events.length > 0) {
+      const activeEventsArray = events.filter(event => event.status === 'active');
+      const activeEvents = activeEventsArray.length;
 
-    // if (dateRange.startDate && dateRange.endDate) {
-    //   console.log('Fetching events for date range:', dateRange);
-    //   dispatch(fetchEvents({ startDate: dateRange.startDate, endDate: dateRange.endDate }));
-    // }
+      const activeVolunteersSet = new Set();
+      activeEventsArray.forEach(event => event.volunteers.forEach(volunteer => activeVolunteersSet.add(volunteer)));
+      const activeVolunteers = activeVolunteersSet.size;
 
-    // Use mock data for testing
+      setPreviousCounts(eventCounts);
+
+      setEventCounts({
+        activeEvents,
+        totalEvents: events.length,
+        activeVolunteers,
+      });
+
+      const dailyCounts = calculateDailyCounts(events, dateRange);
+      setDailyEventCounts(dailyCounts);
+    } else {
+      setPreviousCounts(eventCounts);
+
+      setEventCounts({
+        activeEvents: 0,
+        totalEvents: 0,
+        activeVolunteers: 0,
+      });
+
+      setDailyEventCounts([]);
+    } */
     setMockData();
   }, [dispatch, dateRange]);
 
+
+    // Mock data for testing
+    const mockEvents = [
+      { id: 1, eventType: 'FIRE', date: '2024-06-01', status: 'done', volunteers: [1], latitude: 49.841082, longitude: 24.030533 },
+      { id: 2, eventType: 'FIRE', date: '2024-06-02', status: 'done', volunteers: [1], latitude: 49.841082, longitude: 24.030533 },
+      { id: 3, eventType: 'FIRE', date: '2024-06-05', status: 'active', volunteers: [1,2,3,4], latitude: 49.841082, longitude: 24.030533 },
+      { id: 4, eventType: 'FIRE', date: '2024-06-05', status: 'done', volunteers: [1], latitude: 49.841082, longitude: 24.030533 },
+      { id: 5, eventType: 'FIRE', date: '2024-06-05', status: 'done', volunteers: [1], latitude: 49.841082, longitude: 24.030533 },
+      { id: 6, eventType: 'FIRE', date: '2024-06-09', status: 'done', volunteers: [1,2,3,4,5,6], latitude: 49.842082, longitude: 24.031533 },
+      { id: 7, eventType: 'FIRE', date: '2024-06-10', status: 'done', volunteers: [1], latitude: 49.843082, longitude: 24.032533 },
+      { id: 8, eventType: 'FIRE', date: '2024-06-10', status: 'active', volunteers: [1], latitude: 49.844082, longitude: 24.033533 },
+    ];
+    
   const setMockData = () => {
     if (mockEvents.length > 0) {
-      const activeEvents = mockEvents.filter(event => event.status === 'active').length;
-      const activeVolunteers = mockEvents.reduce((acc, event) => acc + event.volunteers.length, 0);
+
+      const activeEventsArray = mockEvents.filter(event => event.status === 'active');
+      const activeEvents = activeEventsArray.length;
+
+      const activeVolunteersSet = new Set();
+      activeEventsArray.forEach(event => event.volunteers.forEach(volunteer => activeVolunteersSet.add(volunteer))  );
+      const activeVolunteers = activeVolunteersSet.size;
 
       setPreviousCounts(eventCounts);
 
@@ -114,8 +144,8 @@ const AnalyticsPage = () => {
 
   const renderCount = (count, previousCount, dailyCounts) => {
     const difference = count - previousCount;
-    const differenceText = ( difference > 0 ) ? `+${difference}` : difference;
-    const differenceColor = ( difference > 0 )? 'bg-red-200' : (difference === 0 ? 'bg-body-200' : 'bg-green-200');
+    const differenceText = (difference >= 0) ? `+${difference}` : difference;
+    const differenceColor = (difference > 0) ? 'bg-red-50' : (difference === 0 ? 'bg-body-50' : 'bg-green-50');
 
     return (
       <div className="flex flex-col items-start w-full">
@@ -127,18 +157,18 @@ const AnalyticsPage = () => {
             </span>
           }
         </div>
-        <ResponsiveContainer width="80%" height="80%">
+        <ResponsiveContainer width="80%" height={80}>
           <AreaChart data={dailyCounts}>
-            <defs>s
+            <defs>
               <linearGradient id="color_count" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="2%" stopColor="#1288CB" stopOpacity={0.8}/>
-                <stop offset="95%" stopColor="#1288CB" stopOpacity={0}/>
+                <stop offset="10%" stopColor="#1288CB" stopOpacity={0.4} />
+                <stop offset="40%" stopColor="#1288CB" stopOpacity={0.1} />
               </linearGradient>
-            </defs>              
-            <XAxis dataKey="date" tick={false} axisLine={false}/>
-            <YAxis  tick={false} axisLine={false} />
+            </defs>
+            <XAxis dataKey="date" axisLine={false} tickLine={false} tick={false} />
+            <YAxis axisLine={false} tickLine={false} tick={false} />
             <Tooltip />
-            <Area type="monotone" dataKey="count" stroke="#8884d8" fillOpacity={1} fill="url(#color_count)" />
+            <Area type="monotone" dataKey="count" stroke="#1288CB" fillOpacity={1} fill="url(#color_count)" />
           </AreaChart>
         </ResponsiveContainer>
       </div>
@@ -156,7 +186,7 @@ const AnalyticsPage = () => {
       <div className="flex flex-grow">
         <div className="flex-grow relative z-0 pr-4">
           <Map
-            markers={mockEvents.map((event) => ({
+            markers={events.map((event) => ({
               id: event.id,
               type: event.eventType,
               position: [event.latitude, event.longitude],
@@ -181,6 +211,7 @@ const AnalyticsPage = () => {
         </div>
       </div>
       {loading && <LoadingOverlay />}
+      {error && <div className="text-red-500">{error}</div>}
     </div>
   );
 };
