@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 
 import { DateRangePicker, CustomProvider } from 'rsuite';
 import 'rsuite/dist/rsuite.min.css';
-import enGB from 'date-fns/locale/en-GB';
 
 import subDays from 'date-fns/subDays';
 import startOfWeek from 'date-fns/startOfWeek';
@@ -12,7 +11,7 @@ import addDays from 'date-fns/addDays';
 import startOfMonth from 'date-fns/startOfMonth';
 import endOfMonth from 'date-fns/endOfMonth';
 import addMonths from 'date-fns/addMonths';
-
+import { uk } from 'date-fns/locale';
 
 const predefinedRanges = [
   {
@@ -91,7 +90,6 @@ const predefinedRanges = [
   }
 ];
 
-
 const uk_UA = {
   sunday: 'Нд',
   monday: 'Пн',
@@ -108,9 +106,8 @@ const uk_UA = {
   seconds: 'Секунди',
   formattedMonthPattern: 'MMM yyyy',
   formattedDayPattern: 'dd MMM yyyy',
-  dateLocale: enGB,
-  last7Days: 'Останні 7 днів',
-  months: ['Січ', 'Лют', 'Бер', 'Кві', 'Тра', 'Чер', 'Лип', 'Сер', 'Вер', 'Жов', 'Лис', 'Гру'], };
+  dateLocale: uk
+};
 
 const locale = {
   common: {
@@ -120,7 +117,6 @@ const locale = {
   Calendar: uk_UA,
   DateRangePicker: {
     ...uk_UA,
-    months: uk_UA.months
   },
   Picker: {
     noResultsText: 'Результатів не знайдено',
@@ -128,7 +124,6 @@ const locale = {
     searchPlaceholder: 'Пошук',
     checkAll: 'Всі'
   },
-
 };
 
 const { afterToday } = DateRangePicker;
@@ -138,8 +133,10 @@ const { afterToday } = DateRangePicker;
  * DateRange component that renders a date range picker with predefined ranges and locale settings.
  *
  * @component
- * @param {Object} props - The props object.
+ * @param {Object} props - The props object
  * @returns {JSX.Element} The rendered date range picker component.
+ * @param {function} [props.onChange] - Callback fired when value changed. (value: [Date, Date]) => void
+ * @param {function} [props.onOk] - Callback fired when clicked OK button. (value: [Date, Date]) => void
  *
  * @example
  * // Example usage:
@@ -148,15 +145,19 @@ const { afterToday } = DateRangePicker;
  * function App() {
  *   return (
  *     <div>
- *       <DateRange />
+ *       <DateRange onChange={handleDateChange}/>
  *     </div>
  *   );
  * }
+ * https://rsuitejs.com/components/date-range-picker/
  */
 
 class DateRange extends Component {
   
   render() {
+
+    const { onChange, onOk } = this.props;
+
     return (
       <CustomProvider locale={locale}>
         <DateRangePicker
@@ -167,9 +168,12 @@ class DateRange extends Component {
           weekStart='1'
           shouldDisableDate={afterToday()}
           ranges={predefinedRanges}
-          style={{ width: 330 }}
+          defaultValue={[new Date(), new Date()]} // set today as default value
+          //style={{ width: 330 }}
+          onChange={onChange} 
+          onOk={onOk} 
         />
-        </CustomProvider>
+      </CustomProvider>
     );
   }
 }
