@@ -15,7 +15,6 @@ const AnalyticsPage = () => {
     startDate: new Date().toISOString().split('T')[0], // init date range with today date
     endDate: new Date().toISOString().split('T')[0]
   });
-  
   const [currentEventsCount, setCurrentEventsCount] = useState({
     activeEvents: 0,
     totalEvents: 0,
@@ -34,7 +33,6 @@ const AnalyticsPage = () => {
     activeVolunteers: [],
     totalVolunteers: [],
   });
-
   const [pageable, setPageable] = useState({
     page: 1,
     size: 100,
@@ -44,14 +42,15 @@ const AnalyticsPage = () => {
 
   useEffect(() => {
 
-    // current date range
+    // get current date range
     let currentStartDate = new Date(dateRange.startDate);
     let currentEndDate = new Date(dateRange.endDate);
-    const timePeriod = currentEndDate - currentStartDate + 1000 * 60 * 60 * 24;
 
-    // cprevious date range
-    let previousStartDate = new Date(currentStartDate - timePeriod);
-    let previousEndDate = new Date(currentEndDate - timePeriod);  
+    const timePeriod_Millisecond = currentEndDate - currentStartDate + 1000 * 60 * 60 * 24;
+
+    // get previous date range
+    let previousStartDate = new Date(currentStartDate - timePeriod_Millisecond);
+    let previousEndDate = new Date(currentEndDate - timePeriod_Millisecond);  
 
     let testEvents = 
     [
@@ -128,24 +127,21 @@ const AnalyticsPage = () => {
       }
     ];
 
+    // get events
+    
     // get events in previous and currents date ranges
-    
-    dispatch(fetchEvents(pageable));
+    // not yet implemented
     // dispatch(fetchEvents({ startDate: previousStartDate, endDate: currentEndDate }));
-    
-    //events = testEvents; // use test events
-    
 
-    //alert(`${JSON.stringify(events)}`)
+    // get all events
+    dispatch(fetchEvents(pageable));
+    
+    // get test events
+    //events = testEvents; 
 
-    // calculate statistic for selected date range
-    console.log(`currentStartDate`);
-    console.log(currentStartDate);
-    console.log(`currentEndDate`);
-    console.log(currentEndDate);
+    // calculate general statistic for selected date range
     let eventsInDateRange = events.filter(event => {
       const eventDate = new Date(event.createdAt);
-      console.log(eventDate);
       return eventDate >= currentStartDate && eventDate <= currentEndDate;
     });  
     let totalVolunteers = []; eventsInDateRange.forEach(event => event.volunteers.forEach(volunteer => totalVolunteers.push(volunteer)));
@@ -155,7 +151,7 @@ const AnalyticsPage = () => {
     let activeVolunteers = []; activeEvents.forEach(event => event.volunteers.forEach(volunteer => activeVolunteers.push(volunteer)));
     setCurrentEventsCount({ activeEvents: activeEvents.length, totalEvents: eventsInDateRange.length, activeVolunteers: new Set(activeVolunteers).size, totalVolunteers: new Set(totalVolunteers).size} );
 
-    // calculate statiostic for each day for selected date range
+    // calculate statistic for each day for selected date range
     setCurrentEventsDailyCount( { 
       activeEvents: calculateCountByDays(activeEvents, dateRange, 'events'),
       totalEvents: calculateCountByDays(eventsInDateRange, dateRange, 'events'),
@@ -176,7 +172,8 @@ const AnalyticsPage = () => {
 
   }, [dispatch, dateRange]);
 
-  // calculate events or volonteers in date range
+  // calculate statistic on events or volonteers in dateRange
+  // type = [`events`, `volunteers`]
   const calculateCountByDays = (items, dateRange, type) => {
     const counts = {};
     const startDate = new Date(dateRange.startDate);
@@ -207,16 +204,18 @@ const AnalyticsPage = () => {
     }));
   };
 
-
+  // handle date range changed
   const handleDateChange = (value) => {
 
     const [startDate, endDate] = value;
-    const startDateISO = new Date(startDate.getTime() - (startDate.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
-    const endDateISO = new Date(endDate.getTime() - (endDate.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
-    setDateRange({ startDate: startDateISO, endDate: endDateISO });
   
-  };
+    // Set hours to include the entire day
+    startDate.setHours(0, 0, 0, 0);
+    endDate.setHours(23, 59, 59, 999);
 
+    setDateRange({ startDate: startDate, endDate: endDate });
+  };
+  
   // render statistics cell and chart
   const renderCount = (count, previousCount, dailyCounts) => {
     const difference = count - previousCount;
