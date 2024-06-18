@@ -166,7 +166,7 @@ class DateRange extends Component {
           label="Період: "
           preventOverflow={true} 
           weekStart={1}
-          shouldDisableDate={afterToday()}
+          //shouldDisableDate={afterToday()}
           ranges={predefinedRanges}
           defaultValue={[new Date(), new Date()]} // set today as default value
           //style={{ width: 330 }}

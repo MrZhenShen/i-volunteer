@@ -55,22 +55,77 @@ const AnalyticsPage = () => {
 
     let testEvents = 
     [
-      { id: 1, eventType: 'FIRE', createdAt: '2024-06-03', status: 'FINISHED', volunteers: [1,2], address:{latitude: 49.801, longitude: 24.035} },
-      { id: 2, eventType: 'FIRE', createdAt: '2024-06-04', status: 'FINISHED', volunteers: [3], address:{latitude: 49.802, longitude: 24.048} },
-      { id: 3, eventType: 'FIRE', createdAt: '2024-06-05', status: 'FINISHED', volunteers: [41,42,43,44], address:{latitude: 49.804, longitude: 24.032} },
-      { id: 4, eventType: 'FIRE', createdAt: '2024-06-06', status: 'FINISHED', volunteers: [51], address:{latitude: 49.803, longitude: 24.039} },
-      { id: 5, eventType: 'FIRE', createdAt: '2024-06-07', status: 'FINISHED', volunteers: [61,64,66], address:{latitude: 49.850, longitude: 24.041} },
-      { id: 6, eventType: 'FIRE', createdAt: '2024-06-08', status: 'FINISHED', volunteers: [71,72,73,74,75,76], address:{latitude: 49.849, longitude: 24.045} },
-      { id: 7, eventType: 'FIRE', createdAt: '2024-06-08', status: 'FINISHED', volunteers: [81,82, 83], address:{latitude: 49.847, longitude: 24.036} },
-      { id: 8, eventType: 'FIRE', createdAt: '2024-06-09', status: 'FINISHED', volunteers: [92,94], address:{latitude: 49.848, longitude: 24.043} },      
-      { id: 9, eventType: 'FIRE', createdAt: '2024-06-10', status: 'FINISHED', volunteers: [1,2], address:{latitude: 49.801, longitude: 24.038} },
-      { id: 10, eventType: 'FIRE', createdAt: '2024-06-10', status: 'FINISHED', volunteers: [3], address:{latitude: 49.802, longitude: 24.045} },
-      { id: 11, eventType: 'FIRE', createdAt: '2024-06-11', status: 'FINISHED', volunteers: [41,42,43,44], address:{latitude: 49.849, longitude: 24.032} },
-      { id: 12, eventType: 'FIRE', createdAt: '2024-06-12', status: 'FINISHED', volunteers: [51], address:{latitude: 49.803, longitude: 24.037} },
-      { id: 13, eventType: 'FIRE', createdAt: '2024-06-13', status: 'FINISHED', volunteers: [61,64,66], address:{latitude: 49.848, longitude: 24.040} },
-      { id: 14, eventType: 'FIRE', createdAt: '2024-06-15', status: 'FINISHED', volunteers: [71,72,73,74,75,76], address:{latitude: 49.850, longitude: 24.034} },
-      { id: 15, eventType: 'FIRE', createdAt: '2024-06-17', status: 'IN_PROGRESS', volunteers: [81,82, 83], address:{latitude: 49.847, longitude: 24.033} },
-      { id: 16, eventType: 'FIRE', createdAt: '2024-06-18', status: 'CREATED', volunteers: [92,94], address:{latitude: 49.846, longitude: 24.039} },
+      {
+        "id": 18,
+        "eventType": "OTHER",
+        "zipCode": null,
+        "address": {
+          "id": 18,
+          "street": "вулиця",
+          "apartmentNumber": "1",
+          "buildingNumber": null,
+          "city": "Львів",
+          "state": "Львівська",
+          "zipCode": "79000",
+          "latitude": 49.87118501043983,
+          "longitude": 23.985214233398438
+        },
+        "volunteers": [
+          {
+            "id": 2,
+            "correlationId": "2b69deb8-4795-43f1-936a-dc1ce43ae368",
+            "firstName": "Ростислав",
+            "lastName": "Гриник",
+            "mobilePhone": "0639302157",
+            "address": {
+              "id": null,
+              "street": "Стрийська",
+              "apartmentNumber": null,
+              "buildingNumber": "61",
+              "city": "Львів",
+              "state": "Львівьска обл.",
+              "zipCode": "79031",
+              "latitude": 0,
+              "longitude": 0
+            },
+            "birthDate": "1990-03-15",
+            "latitude": 0,
+            "longitude": 0,
+            "status": "REQUESTED",
+            "tokens": [
+              {
+                "id": 154,
+                "token": "APA91bH3f4sOpfxYyemBOyljXelpEwD0sFpPNCkEzep3ze6l8RdaznDXl7u1hio9trVLlDE8yvNeNfRrWyL4P18aTLATkKYc8lHYUzc2zb0XfRh1QPYKG_byRljU216xQEEKkltKdcRt",
+                "expiryDateTime": "2024-07-05T19:57:20.248048"
+              }
+            ],
+            "rnokpp": "1"
+          }
+        ],
+        "description": "вода",
+        "status": "IN_PROGRESS",
+        "createdAt": "2024-06-18T14:16:27.302288"
+      },
+      {
+        "id": 19,
+        "eventType": "SEARCH_AND_RESCUE",
+        "zipCode": null,
+        "address": {
+          "id": 19,
+          "street": "вулиця",
+          "apartmentNumber": "1",
+          "buildingNumber": null,
+          "city": "Львів",
+          "state": "Львівська",
+          "zipCode": "79000",
+          "latitude": 49.91144015213966,
+          "longitude": 23.887023925781254
+        },
+        "volunteers": [],
+        "description": "опис події",
+        "status": "IN_PROGRESS",
+        "createdAt": "2024-06-18T14:17:38.513258"
+      }
     ];
 
     // get events in previous and currents date ranges
@@ -80,12 +135,21 @@ const AnalyticsPage = () => {
     
     //events = testEvents; // use test events
     
-    //console.log(events)
+
     //alert(`${JSON.stringify(events)}`)
 
     // calculate statistic for selected date range
-    let eventsInDateRange = events.filter(event => { const eventDate = new Date(event.createdAt); return eventDate >= currentStartDate && eventDate <= currentEndDate; });
+    console.log(`currentStartDate`);
+    console.log(currentStartDate);
+    console.log(`currentEndDate`);
+    console.log(currentEndDate);
+    let eventsInDateRange = events.filter(event => {
+      const eventDate = new Date(event.createdAt);
+      console.log(eventDate);
+      return eventDate >= currentStartDate && eventDate <= currentEndDate;
+    });  
     let totalVolunteers = []; eventsInDateRange.forEach(event => event.volunteers.forEach(volunteer => totalVolunteers.push(volunteer)));
+    console.log(eventsInDateRange)
 
     let activeEvents = eventsInDateRange.filter(event => event.status === 'IN_PROGRESS');
     let activeVolunteers = []; activeEvents.forEach(event => event.volunteers.forEach(volunteer => activeVolunteers.push(volunteer)));
@@ -100,7 +164,10 @@ const AnalyticsPage = () => {
     } );
     
     // calculate statistic for previuos date range
-    eventsInDateRange = events.filter(event => { const eventDate = new Date(event.createdAt); return eventDate >= previousStartDate && eventDate <= previousEndDate; });  
+    eventsInDateRange = events.filter(event => {
+      const eventDate = new Date(event.createdAt);
+      return eventDate >= previousStartDate && eventDate <= previousEndDate;
+    });  
     totalVolunteers = []; eventsInDateRange.forEach(event => event.volunteers.forEach(volunteer => totalVolunteers.push(volunteer)));
 
     activeEvents = eventsInDateRange.filter(event => event.status === 'IN_PROGRESS');
@@ -194,12 +261,20 @@ const AnalyticsPage = () => {
       </div>
       <div className="flex flex-grow">
         <div className="flex-grow relative z-0">
-          <Map
-            markers={events.map((event) => ({
-              type: 'event',
-              position: [event.address.latitude, event.address.longitude],
-              selected: false,
-            }))}
+        <Map
+            markers={events  
+              .filter(event => {
+                const eventDate = new Date(event.createdAt);
+                const currentStartDate = new Date(dateRange.startDate);
+                const currentEndDate = new Date(dateRange.endDate);
+                return eventDate >= currentStartDate && eventDate <= currentEndDate;
+              })  
+              .map(event => ({
+                id: event.id,
+                type: 'event',
+                position: [event.address.latitude, event.address.longitude],
+                selected: false,
+              }))}
             className="absolute inset-0"
           />
         </div>
