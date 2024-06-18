@@ -1,13 +1,76 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { Menu } from '../components/Menu';
 import Button from "../components/Button";
 import { Map } from "../components/map/Map";
 import LoadingOverlay from '../components/LoadingOverlay';
+import VolunteerInfoSlideOver from '../features/volunteers/components/VolunteerInfoSlideOver';
+import { fetchVolunteers } from "../features/volunteers/thunks";
+import { fetchEvents } from '../features/events/thunks';
+import EventInfoSlideOver from '../features/events/components/EventsInfoSlideOver';
+
+function volunteersToMarkers(volunteers) {
+  return volunteers.map((volunteer) => ({
+    id: `volunteer/${volunteer.id}`,
+    type: 'rescuer', // TODO: replace with volunteer.role when implemented
+    position: [49.83002537341331, 24.06477928161621],
+    selected: false,
+  }));
+}
+
+function eventsToMarkers(events) {
+  return events.map((event) => ({
+    id: `event/${event.id}`,
+    type: 'event',
+    position: [event.address.latitude, event.address.longitude],
+    selected: false,
+  }));
+}
 
 export function MapPage() {
+  const dispatch = useDispatch();
   const [selected, setSelected] = useState("all");
-  const loading = true;
+  const [selectedMarker, setSelectedMarker] = useState(null);
+
+  const { data: volunteers, loading: volunteersLoading } =
+    useSelector((state) => state.volunteers);
+
+  const { data: events, loading: eventsLoading } =
+    useSelector((state) => state.events);
+
+  function onMapClick({ lat, lng }) {
+    console.log('map clicked', lat, lng);
+    setSelectedMarker(null);
+  }
+
+  function onMarkerClick(marker) {
+    console.log('marker clicked', marker);
+    marker.selected = true;
+    setSelectedMarker(marker);
+  }
+
+  function isOpenType(type) {
+    if (selectedMarker === null) return false;
+    return selectedMarker.id.split('/')[0] === type
+  }
+
+  const markers = [
+    ...volunteersToMarkers(volunteers),
+    ...eventsToMarkers(events),
+  ];
+
+  useEffect(() => {
+    const pageSettings = {
+      page: 1,
+      size: 10,
+      sortBy: "",
+      sortOrder: "",
+      filter: "",
+    }
+    dispatch(fetchVolunteers(pageSettings));
+    dispatch(fetchEvents(pageSettings));
+  }, [dispatch]);
 
   const filters = [
     { label: "Всі", value: "all", icon: 'Checkmark' },
@@ -28,23 +91,22 @@ export function MapPage() {
       </div>
 
       <div className="relative pt-4 flex-grow">
-        <Map
-          markers={[
-            {
-              id: 1,
-              type: "event",
-              position: [49.84108232367849, 24.030532836914066],
-              selected: false
-            },
-            {
-              id: 2,
-              type: "rescuer",
-              position: [49.84047343621103, 24.045767784118652],
-              selected: false
-            }
-          ]} />
+        <Map markers={markers} onClick={onMapClick} onMarkerClick={onMarkerClick} />
       </div>
-      {loading && <LoadingOverlay />}
+
+      <VolunteerInfoSlideOver
+        volunteer={volunteers.find((volunteer) => `volunteer/${volunteer.id}` === selectedMarker?.id)}
+        isOpen={isOpenType('volunteer')}
+        toggle={() => setSelectedMarker(null)}
+      />
+
+      <EventInfoSlideOver
+        event={events.find((event) => `event/${event.id}` === selectedMarker?.id)}
+        isOpen={isOpenType('event')}
+        toggle={() => setSelectedMarker(null)}
+      />
+
+      {eventsLoading && volunteersLoading && <LoadingOverlay />}
     </>
   );
 }

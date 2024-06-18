@@ -12,7 +12,13 @@ import { EventLayer } from './EventLayer';
   * @note The `type` can be 'event', 'medic', 'policeman', or 'rescuer'.
   * @note The parent component must have its own height
 */
-export const Map = ({ markers, center, zoom }) => {
+export const Map = ({
+  markers,
+  center,
+  zoom,
+  onMarkerClick,
+  onClick,
+}) => {
   const defaultCenter = [49.84108232367849, 24.030532836914066];
   const defaultZoom = 11;
 
@@ -26,18 +32,18 @@ export const Map = ({ markers, center, zoom }) => {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <EventLayer />
+      <EventLayer onMarkerClick={onMarkerClick} onClick={onClick} />
       {
         (markers ?? []).map(({ id, type, position, selected }) => {
           switch (type) {
             case 'event':
-              return <EventMarker key={`${type}/${id}`} id={id} position={position} selected={selected} />
+              return <EventMarker key={`${type}/${id}`} onClick={onMarkerClick} id={id} position={position} selected={selected} />
             case 'medic':
-              return <MedicMarker key={`${type}/${id}`} id={id} position={position} selected={selected} />
+              return <MedicMarker key={`${type}/${id}`} onClick={onMarkerClick} id={id} position={position} selected={selected} />
             case 'policeman':
-              return <PolicemanMarker key={`${type}/${id}`} id={id} position={position} selected={selected} />
+              return <PolicemanMarker key={`${type}/${id}`} onClick={onMarkerClick} id={id} position={position} selected={selected} />
             case 'rescuer':
-              return <RescuerMarker key={`${type}/${id}`} id={id} position={position} selected={selected} />
+              return <RescuerMarker key={`${type}/${id}`} onClick={onMarkerClick} id={id} position={position} selected={selected} />
             default:
               return null
           }

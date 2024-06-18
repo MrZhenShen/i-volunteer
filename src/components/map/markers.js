@@ -50,7 +50,7 @@ const MarkerIcon = ({ color, children, selected }) => {
   return <div className={className}>{children}</div>
 }
 
-const CommonMarker = ({ id, type, position, selected, children }) => {
+const CommonMarker = ({ id, type, position, selected, children, onClick }) => {
   const classMap = {
     event: {
       color: selected ? 'bg-red-800' : 'bg-red-500',
@@ -85,7 +85,8 @@ const CommonMarker = ({ id, type, position, selected, children }) => {
     eventHandlers={
       {
         click: () => {
-          dispatch(actions.markerClick({ id, type, position }))
+          dispatch(actions.markerClick({ id, type, position }));
+          onClick && onClick({ id, type, position });
         }
       }
     }
@@ -100,12 +101,12 @@ const CommonMarker = ({ id, type, position, selected, children }) => {
   * @returns {JSX.Element}
   * @example <RescuerMarker position={[51.500, -0.1]} selected={true} />
 */
-export const RescuerMarker = ({ id, position, selected }) => {
+export const RescuerMarker = ({ id, position, selected, onClick }) => {
   const iconFill = 'fill-white';
   const iconSize = selected ? ['w-8', 'h-8'] : ['w-5', 'h-5'];
 
   return (
-    <CommonMarker id={id} type="volunteer" position={position} selected={selected}>
+    <CommonMarker id={id} type="volunteer" position={position} selected={selected} onClick={onClick}>
       <RescuerIcon className={classnames(iconFill, iconSize)} />
     </CommonMarker>
   )
@@ -118,12 +119,12 @@ export const RescuerMarker = ({ id, position, selected }) => {
   * @returns {JSX.Element}
   * @example <MedicMarker position={[51.500, -0.1]} />
 */
-export const MedicMarker = ({ id, position, selected }) => {
+export const MedicMarker = ({ id, position, selected, onClick }) => {
   const iconFill = 'fill-white';
   const iconSize = selected ? ['w-8', 'h-8'] : ['w-5', 'h-5'];
 
   return (
-    <CommonMarker id={id} type="volunteer" position={position} selected={selected}>
+    <CommonMarker id={id} type="volunteer" position={position} selected={selected} onClick={onClick}>
       <DoctorIcon className={classnames(iconFill, iconSize)} />
     </CommonMarker>
   )
@@ -136,12 +137,12 @@ export const MedicMarker = ({ id, position, selected }) => {
   * @returns {JSX.Element}
   * @example <PolicemanMarker position={[51.500, -0.1]} selected />
 */
-export const PolicemanMarker = ({ id, position, selected }) => {
+export const PolicemanMarker = ({ id, position, selected, onClick }) => {
   const iconFill = 'fill-white';
   const iconSize = selected ? ['w-8', 'h-8'] : ['w-5', 'h-5'];
 
   return (
-    <CommonMarker id={id} type="volunteer" position={position} selected={selected}>
+    <CommonMarker id={id} type="volunteer" position={position} selected={selected} onClick={onClick}>
       <PolicemanIcon className={classnames(iconFill, iconSize)} />
     </CommonMarker>
   )
@@ -154,11 +155,11 @@ export const PolicemanMarker = ({ id, position, selected }) => {
   * @returns {JSX.Element}
   * @example <EventMarker position={[51.500, -0.1]} />
 */
-export const EventMarker = ({ id, position, selected }) => {
+export const EventMarker = ({ id, position, selected, onClick }) => {
   const iconFill = 'fill-white';
   const iconSize = selected ? ['w-8', 'h-8'] : ['w-5', 'h-5'];
   return (
-    <CommonMarker id={id} type="event" position={position} selected={selected}>
+    <CommonMarker id={id} type="event" position={position} selected={selected} onClick={onClick}>
       <ExclamationIcon className={classnames(iconFill, iconSize)} />
     </CommonMarker>
   )

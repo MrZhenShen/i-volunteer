@@ -3,8 +3,12 @@ import Icon from "../components/Icon";
 import avatar from "../assets/avatar.png";
 
 const NavigationBar = () => {
-  const linkStyle = "text-primary-400 hover:text-gray-800 flex items-center py-1 px-2 gap-2";
-  const linkActive = "bg-primary-50 rounded-md";
+  const linkStyle =
+    "flex items-center text-primary-400 " +
+    "hover:text-gray-800 hover:no-underline " +
+    "py-1 px-2 gap-2 ";
+  const linkActive =
+    "bg-primary-50 focus:text-gray-800 focus:no-underline rounded-md";
   const linkIconBoxStyle = "bg-primary-50 p-0.5 rounded";
   const linkIconStyle = "w-5 h-5";
 
@@ -19,7 +23,9 @@ const NavigationBar = () => {
         <div className="flex space-x-4 gap-12">
           <NavLink
             to="/map"
-            className={({ isActive }) => isActive ? `${linkStyle} ${linkActive}` : linkStyle}
+            className={({ isActive }) =>
+              isActive ? `${linkStyle} ${linkActive}` : linkStyle
+            }
           >
             <div className={linkIconBoxStyle}>
               <Icon name="Map" className={linkIconStyle} />
@@ -28,7 +34,9 @@ const NavigationBar = () => {
           </NavLink>
           <NavLink
             to="/events"
-            className={({ isActive }) => isActive ? `${linkStyle} ${linkActive}` : linkStyle}
+            className={({ isActive }) =>
+              isActive ? `${linkStyle} ${linkActive}` : linkStyle
+            }
           >
             <div className={linkIconBoxStyle}>
               <Icon name="Event" className={linkIconStyle} />
@@ -37,7 +45,9 @@ const NavigationBar = () => {
           </NavLink>
           <NavLink
             to="/volunteers"
-            className={({ isActive }) => isActive ? `${linkStyle} ${linkActive}` : linkStyle}
+            className={({ isActive }) =>
+              isActive ? `${linkStyle} ${linkActive}` : linkStyle
+            }
           >
             <div className={linkIconBoxStyle}>
               <Icon name="Helmet" className={linkIconStyle} />
@@ -46,7 +56,9 @@ const NavigationBar = () => {
           </NavLink>
           <NavLink
             to="/analytics"
-            className={({ isActive }) => isActive ? `${linkStyle} ${linkActive}` : linkStyle}
+            className={({ isActive }) =>
+              isActive ? `${linkStyle} ${linkActive}` : linkStyle
+            }
           >
             <div className={linkIconBoxStyle}>
               <Icon name="Analytics" className={linkIconStyle} />

@@ -6,9 +6,9 @@ import { Form, Formik } from "formik";
 import Pagination from "../components/Pagination";
 import Status from "../components/Status";
 import Icon from "../components/Icon";
-import VolunteerDetailsSlideOver from "../containers/slide-overs/VolunteerDetailsSlideOver";
 import { fetchVolunteers } from "../features/volunteers/thunks";
 import { VolunteerStatusDetails } from "../api/volunteer.facade";
+import VolunteerInfoSlideOver from "../features/volunteers/components/VolunteerInfoSlideOver";
 
 const VolunteersPage = () => {
   const dispatch = useDispatch();
@@ -68,11 +68,13 @@ const VolunteersPage = () => {
     { value: `${pageDetails.totalItems}`, label: "Усі" },
   ];
 
+  const tbodyCellStyle = "px-6 py-4 whitespace-nowrap z-1";
+
   return (
     <>
       <Formik initialValues={{ pageSize: pageable.size }}>
-        <Form>
-          <div className="flex flex-col py-8 gap-6">
+        <Form className="h-full overflow-hidden">
+          <div className="flex flex-col h-full overflow-hidden py-8 gap-6">
             <div className="flex justify-between items-center">
               <h1 className="text-body-900 text-lg font-bold">Добровольці</h1>
             </div>
@@ -94,9 +96,9 @@ const VolunteersPage = () => {
               </div>
             </div>
 
-            <div className="overflow-hidden rounded-md">
+            <div className="overflow-auto rounded-md">
               <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-body-50">
+                <thead className="bg-body-50/70 backdrop-blur-sm sticky top-0 z-10">
                   <tr>
                     <th className={tableHeaderCellStyle}>
                       <div className="flex gap-2.5 items-center">Ім'я</div>
@@ -158,7 +160,7 @@ const VolunteersPage = () => {
 
                       return (
                         <tr key={volunteer.id}>
-                          <td className="px-6 py-4 whitespace-nowrap">
+                          <td className={tbodyCellStyle}>
                             <Button
                               variant="link"
                               onClick={() => handleOpenSlideOver(volunteer)}
@@ -166,15 +168,15 @@ const VolunteersPage = () => {
                               {volunteer.firstName} {volunteer.lastName}
                             </Button>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
+                          <td className={tbodyCellStyle}>
                             {volunteer.address.state}
                             {volunteer.address.city &&
                               `, ${volunteer.address.city}`}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
+                          <td className={tbodyCellStyle}>
                             {volunteer.mobilePhone}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
+                          <td className={tbodyCellStyle}>
                             <Status
                               placeholder={statusText}
                               value={statusText}
@@ -199,11 +201,10 @@ const VolunteersPage = () => {
         </Form>
       </Formik>
       {selectedVolunteer && (
-        <VolunteerDetailsSlideOver
-          open={isVolunteerDetailsSlideOverOpen}
-          setOpen={setIsVolunteerDetailsSlideOverOpen}
+        <VolunteerInfoSlideOver
           volunteer={selectedVolunteer}
-        />
+          isOpen={isVolunteerDetailsSlideOverOpen}
+          toggle={() => setIsVolunteerDetailsSlideOverOpen(!isVolunteerDetailsSlideOverOpen)} />
       )}
     </>
   );
