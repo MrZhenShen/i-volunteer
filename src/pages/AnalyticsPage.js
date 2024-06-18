@@ -9,7 +9,7 @@ import { fetchEvents } from '../features/events/thunks';
 
 const AnalyticsPage = () => {
   const dispatch = useDispatch();
-  const { data: events, loading, error } = useSelector((state) => state.events);
+  let { data: events, loading, error } = useSelector((state) => state.events);
 
   const [dateRange, setDateRange] = useState({
     startDate: new Date().toISOString().split('T')[0], // init date range with today date
@@ -35,66 +35,81 @@ const AnalyticsPage = () => {
     totalVolunteers: [],
   });
 
+  const [pageable, setPageable] = useState({
+    page: 1,
+    size: 100,
+    sortBy: 'createdAt',
+    sortOrder: 'desc'
+  });
 
   useEffect(() => {
 
-    // calculate statistic for selected date range
-    let startDate = new Date(dateRange.startDate);
-    let endDate = new Date(dateRange.endDate);
-    const timePeriod = endDate - startDate + 1000 * 60 * 60 * 24;
-        
-    let currentEvents = //fetchEvents (get events for selected date range)
+    // current date range
+    let currentStartDate = new Date(dateRange.startDate);
+    let currentEndDate = new Date(dateRange.endDate);
+    const timePeriod = currentEndDate - currentStartDate + 1000 * 60 * 60 * 24;
+
+    // cprevious date range
+    let previousStartDate = new Date(currentStartDate - timePeriod);
+    let previousEndDate = new Date(currentEndDate - timePeriod);  
+
+    let testEvents = 
     [
-      { id: 1, eventType: 'FIRE', date: '2024-06-10', status: 'done', volunteers: [1,2], latitude: 49.841082, longitude: 24.030533 },
-      { id: 2, eventType: 'FIRE', date: '2024-06-10', status: 'done', volunteers: [3], latitude: 49.841082, longitude: 24.030533 },
-      { id: 3, eventType: 'FIRE', date: '2024-06-11', status: 'done', volunteers: [41,42,43,44], latitude: 49.841082, longitude: 24.030533 },
-      { id: 4, eventType: 'FIRE', date: '2024-06-12', status: 'done', volunteers: [51], latitude: 49.841082, longitude: 24.030533 },
-      { id: 5, eventType: 'FIRE', date: '2024-06-13', status: 'done', volunteers: [61,64,66], latitude: 49.841082, longitude: 24.030533 },
-      { id: 6, eventType: 'FIRE', date: '2024-06-15', status: 'done', volunteers: [71,72,73,74,75,76], latitude: 49.842082, longitude: 24.031533 },
-      { id: 7, eventType: 'FIRE', date: '2024-06-16', status: 'active', volunteers: [81,82, 83], latitude: 49.843082, longitude: 24.032533 },
-      { id: 8, eventType: 'FIRE', date: '2024-06-16', status: 'active', volunteers: [92,94], latitude: 49.844082, longitude: 24.033533 },
+      { id: 1, eventType: 'FIRE', createdAt: '2024-06-03', status: 'FINISHED', volunteers: [1,2], address:{latitude: 49.801, longitude: 24.035} },
+      { id: 2, eventType: 'FIRE', createdAt: '2024-06-04', status: 'FINISHED', volunteers: [3], address:{latitude: 49.802, longitude: 24.048} },
+      { id: 3, eventType: 'FIRE', createdAt: '2024-06-05', status: 'FINISHED', volunteers: [41,42,43,44], address:{latitude: 49.804, longitude: 24.032} },
+      { id: 4, eventType: 'FIRE', createdAt: '2024-06-06', status: 'FINISHED', volunteers: [51], address:{latitude: 49.803, longitude: 24.039} },
+      { id: 5, eventType: 'FIRE', createdAt: '2024-06-07', status: 'FINISHED', volunteers: [61,64,66], address:{latitude: 49.850, longitude: 24.041} },
+      { id: 6, eventType: 'FIRE', createdAt: '2024-06-08', status: 'FINISHED', volunteers: [71,72,73,74,75,76], address:{latitude: 49.849, longitude: 24.045} },
+      { id: 7, eventType: 'FIRE', createdAt: '2024-06-08', status: 'FINISHED', volunteers: [81,82, 83], address:{latitude: 49.847, longitude: 24.036} },
+      { id: 8, eventType: 'FIRE', createdAt: '2024-06-09', status: 'FINISHED', volunteers: [92,94], address:{latitude: 49.848, longitude: 24.043} },      
+      { id: 9, eventType: 'FIRE', createdAt: '2024-06-10', status: 'FINISHED', volunteers: [1,2], address:{latitude: 49.801, longitude: 24.038} },
+      { id: 10, eventType: 'FIRE', createdAt: '2024-06-10', status: 'FINISHED', volunteers: [3], address:{latitude: 49.802, longitude: 24.045} },
+      { id: 11, eventType: 'FIRE', createdAt: '2024-06-11', status: 'FINISHED', volunteers: [41,42,43,44], address:{latitude: 49.849, longitude: 24.032} },
+      { id: 12, eventType: 'FIRE', createdAt: '2024-06-12', status: 'FINISHED', volunteers: [51], address:{latitude: 49.803, longitude: 24.037} },
+      { id: 13, eventType: 'FIRE', createdAt: '2024-06-13', status: 'FINISHED', volunteers: [61,64,66], address:{latitude: 49.848, longitude: 24.040} },
+      { id: 14, eventType: 'FIRE', createdAt: '2024-06-15', status: 'FINISHED', volunteers: [71,72,73,74,75,76], address:{latitude: 49.850, longitude: 24.034} },
+      { id: 15, eventType: 'FIRE', createdAt: '2024-06-17', status: 'IN_PROGRESS', volunteers: [81,82, 83], address:{latitude: 49.847, longitude: 24.033} },
+      { id: 16, eventType: 'FIRE', createdAt: '2024-06-18', status: 'CREATED', volunteers: [92,94], address:{latitude: 49.846, longitude: 24.039} },
     ];
 
-    let events = currentEvents.filter(event => { const eventDate = new Date(event.date); return eventDate >= startDate && eventDate <= endDate; });
-    let totalVolunteers = []; events.forEach(event => event.volunteers.forEach(volunteer => totalVolunteers.push(volunteer)));
+    // get events in previous and currents date ranges
+    
+    dispatch(fetchEvents(pageable));
+    // dispatch(fetchEvents({ startDate: previousStartDate, endDate: currentEndDate }));
+    
+    //events = testEvents; // use test events
+    
+    //console.log(events)
+    //alert(`${JSON.stringify(events)}`)
 
-    let activeEvents = events.filter(event => event.status === 'active');
+    // calculate statistic for selected date range
+    let eventsInDateRange = events.filter(event => { const eventDate = new Date(event.createdAt); return eventDate >= currentStartDate && eventDate <= currentEndDate; });
+    let totalVolunteers = []; eventsInDateRange.forEach(event => event.volunteers.forEach(volunteer => totalVolunteers.push(volunteer)));
+
+    let activeEvents = eventsInDateRange.filter(event => event.status === 'IN_PROGRESS');
     let activeVolunteers = []; activeEvents.forEach(event => event.volunteers.forEach(volunteer => activeVolunteers.push(volunteer)));
-    setCurrentEventsCount({ activeEvents: activeEvents.length, totalEvents: events.length, activeVolunteers: new Set(activeVolunteers).size, totalVolunteers: new Set(totalVolunteers).size} );
+    setCurrentEventsCount({ activeEvents: activeEvents.length, totalEvents: eventsInDateRange.length, activeVolunteers: new Set(activeVolunteers).size, totalVolunteers: new Set(totalVolunteers).size} );
 
     // calculate statiostic for each day for selected date range
     setCurrentEventsDailyCount( { 
       activeEvents: calculateCountByDays(activeEvents, dateRange, 'events'),
-      totalEvents: calculateCountByDays(events, dateRange, 'events'),
+      totalEvents: calculateCountByDays(eventsInDateRange, dateRange, 'events'),
       activeVolunteers: calculateCountByDays(activeEvents, dateRange, 'volunteers'),
-      totalVolunteers: calculateCountByDays(events, dateRange, 'volunteers') 
+      totalVolunteers: calculateCountByDays(eventsInDateRange, dateRange, 'volunteers') 
     } );
     
     // calculate statistic for previuos date range
-    startDate = new Date(startDate - timePeriod);
-    endDate = new Date(endDate - timePeriod);    
+    eventsInDateRange = events.filter(event => { const eventDate = new Date(event.createdAt); return eventDate >= previousStartDate && eventDate <= previousEndDate; });  
+    totalVolunteers = []; eventsInDateRange.forEach(event => event.volunteers.forEach(volunteer => totalVolunteers.push(volunteer)));
 
-    let previousEvents = //fetchEvents
-    [
-      { id: 1, eventType: 'FIRE', date: '2024-06-03', status: 'done', volunteers: [1,2], latitude: 49.841082, longitude: 24.030533 },
-      { id: 2, eventType: 'FIRE', date: '2024-06-04', status: 'done', volunteers: [3], latitude: 49.841082, longitude: 24.030533 },
-      { id: 3, eventType: 'FIRE', date: '2024-06-05', status: 'done', volunteers: [41,42,43,44], latitude: 49.841082, longitude: 24.030533 },
-      { id: 4, eventType: 'FIRE', date: '2024-06-06', status: 'done', volunteers: [51], latitude: 49.841082, longitude: 24.030533 },
-      { id: 5, eventType: 'FIRE', date: '2024-06-07', status: 'done', volunteers: [61,64,66], latitude: 49.841082, longitude: 24.030533 },
-      { id: 6, eventType: 'FIRE', date: '2024-06-08', status: 'done', volunteers: [71,72,73,74,75,76], latitude: 49.842082, longitude: 24.031533 },
-      { id: 7, eventType: 'FIRE', date: '2024-06-08', status: 'done', volunteers: [81,82, 83], latitude: 49.843082, longitude: 24.032533 },
-      { id: 8, eventType: 'FIRE', date: '2024-06-09', status: 'done', volunteers: [92,94], latitude: 49.844082, longitude: 24.033533 },
-    ];        
-    events = previousEvents.filter(event => { const eventDate = new Date(event.date); return eventDate >= startDate && eventDate <= endDate; });  
-    totalVolunteers = []; events.forEach(event => event.volunteers.forEach(volunteer => totalVolunteers.push(volunteer)));
-
-    activeEvents = events.filter(event => event.status === 'active');
+    activeEvents = eventsInDateRange.filter(event => event.status === 'IN_PROGRESS');
     activeVolunteers = []; activeEvents.forEach(event => event.volunteers.forEach(volunteer => activeVolunteers.push(volunteer)));
-    setPreviousEventsCount({ activeEvents: activeEvents.length, totalEvents: events.length, activeVolunteers: new Set(activeVolunteers).size, totalVolunteers: new Set(totalVolunteers).size} );
+    setPreviousEventsCount({ activeEvents: activeEvents.length, totalEvents: eventsInDateRange.length, activeVolunteers: new Set(activeVolunteers).size, totalVolunteers: new Set(totalVolunteers).size} );
 
   }, [dispatch, dateRange]);
 
-  
+  // calculate events or volonteers in date range
   const calculateCountByDays = (items, dateRange, type) => {
     const counts = {};
     const startDate = new Date(dateRange.startDate);
@@ -108,7 +123,7 @@ const AnalyticsPage = () => {
   
     // Count items for each date
     items.forEach(item => {
-      const date = new Date(item.date);
+      const date = new Date(item.createdAt);
       if (!isNaN(date.getTime())) {
         const dateString = date.toISOString().split('T')[0];
         if (type === 'events') {
@@ -125,6 +140,7 @@ const AnalyticsPage = () => {
     }));
   };
 
+
   const handleDateChange = (value) => {
 
     const [startDate, endDate] = value;
@@ -134,6 +150,7 @@ const AnalyticsPage = () => {
   
   };
 
+  // render statistics cell and chart
   const renderCount = (count, previousCount, dailyCounts) => {
     const difference = count - previousCount;
     const differenceText = (difference >= 0) ? `+${difference}` : difference;
@@ -179,9 +196,8 @@ const AnalyticsPage = () => {
         <div className="flex-grow relative z-0">
           <Map
             markers={events.map((event) => ({
-              id: event.id,
-              type: event.eventType,
-              position: [event.latitude, event.longitude],
+              type: 'event',
+              position: [event.address.latitude, event.address.longitude],
               selected: false,
             }))}
             className="absolute inset-0"

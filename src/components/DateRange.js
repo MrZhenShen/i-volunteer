@@ -164,8 +164,8 @@ class DateRange extends Component {
           size="lg"
           format="dd.MM.yyyy"
           label="Період: "
-          preventOverflow='true' 
-          weekStart='1'
+          preventOverflow={true} 
+          weekStart={1}
           shouldDisableDate={afterToday()}
           ranges={predefinedRanges}
           defaultValue={[new Date(), new Date()]} // set today as default value
