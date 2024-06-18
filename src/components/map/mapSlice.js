@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   lat: null,
   lng: null,
+  currentMarkerId: null,
 };
 
 export const mapSlice = createSlice({
@@ -12,8 +13,11 @@ export const mapSlice = createSlice({
     click: (state, action) => {
       state.lat = action.payload.lat;
       state.lng = action.payload.lng;
+      state.currentMarkerId = null;
     },
-    markerClick: () => {},
+    markerClick: (state, action) => {
+      state.currentMarkerId = action.payload.id;
+    },
   },
 });
 

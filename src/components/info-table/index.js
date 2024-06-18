@@ -38,14 +38,14 @@ export function InfoText({ label, text }) {
   )
 }
 
-export function InfoStatus({ statusText, statusColor }) {
+export function InfoStatus({ label = "Статус", statusText, statusColor }) {
   if (!statusText) {
     return null;
   }
 
   return (
     <div className="flex">
-      <InfoLabel label="Статус" />
+      <InfoLabel label={label} />
       <dd className="sm:col-span-2 sm:mt-0 grow self-center">
         <Status placeholder={statusText} value={statusText} color={statusColor} />
       </dd>
