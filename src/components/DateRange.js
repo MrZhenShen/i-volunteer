@@ -26,7 +26,7 @@ const predefinedRanges = [
   },
   {
     label: 'Поточний тиждень',
-    value: [startOfWeek(new Date(), { weekStartsOn: 1 }), new Date()],
+    value: [startOfWeek(new Date(), { weekStartsOn: 1 }), endOfWeek(new Date(), { weekStartsOn: 1 })],
     placement: 'left'
   },
   {
@@ -41,7 +41,7 @@ const predefinedRanges = [
   },
   {
     label: 'Поточний місяць',
-    value: [startOfMonth(new Date()), new Date()],
+    value: [startOfMonth(new Date()), endOfMonth(new Date())],
     placement: 'left'
   },
   {
@@ -56,7 +56,7 @@ const predefinedRanges = [
   },  
   {
     label: 'Поточний рік',
-    value: [new Date(new Date().getFullYear(), 0, 1), new Date()],
+    value: [new Date(new Date().getFullYear(), 0, 1), new Date(new Date().getFullYear(), 11, 31, 23, 59, 59, 999)],
     placement: 'left'
   },
   {
@@ -126,9 +126,6 @@ const locale = {
   },
 };
 
-const { afterToday } = DateRangePicker;
-
-
 /**
  * DateRange component that renders a date range picker with predefined ranges and locale settings.
  *
@@ -165,11 +162,11 @@ class DateRange extends Component {
           format="dd.MM.yyyy"
           label="Період: "
           preventOverflow={true} 
-          weekStart={1}
-          //shouldDisableDate={afterToday()}
-          ranges={predefinedRanges}
-          defaultValue={[new Date(), new Date()]} // set today as default value
-          //style={{ width: 330 }}
+          showOneCalendar={true} 
+          weekStart={1} 
+          cleanable={false} 
+          ranges={predefinedRanges} 
+          defaultValue={[subDays(new Date(), 6), new Date()]}
           onChange={onChange} 
           onOk={onOk} 
         />

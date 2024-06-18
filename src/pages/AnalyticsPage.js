@@ -9,11 +9,12 @@ import { fetchEvents } from '../features/events/thunks';
 
 const AnalyticsPage = () => {
   const dispatch = useDispatch();
+  
   let { data: events, loading, error } = useSelector((state) => state.events);
 
   const [dateRange, setDateRange] = useState({
-    startDate: new Date().toISOString().split('T')[0], // init date range with today date
-    endDate: new Date().toISOString().split('T')[0]
+    startDate: null, 
+    endDate: null
   });
   const [currentEventsCount, setCurrentEventsCount] = useState({
     activeEvents: 0,
@@ -54,6 +55,18 @@ const AnalyticsPage = () => {
 
     let testEvents = 
     [
+      {
+        "id": 17,
+        "eventType": "OTHER",
+        "description": "-",
+        "status": "IN_PROGRESS",
+        "createdAt": "2024-06-15",
+        "address": {
+          "latitude": 49.87118501043983,
+          "longitude": 23.985214233398438
+        },
+        "volunteers": []
+      },
       {
         "id": 18,
         "eventType": "OTHER",
@@ -103,7 +116,7 @@ const AnalyticsPage = () => {
         ],
         "description": "вода",
         "status": "IN_PROGRESS",
-        "createdAt": "2024-06-18T14:16:27.302288"
+        "createdAt": "2024-06-16T14:16:27.302288"
       },
       {
         "id": 19,
@@ -117,13 +130,13 @@ const AnalyticsPage = () => {
           "city": "Львів",
           "state": "Львівська",
           "zipCode": "79000",
-          "latitude": 49.91144015213966,
-          "longitude": 23.887023925781254
+          "latitude": 49.87118501043983,
+          "longitude": 23.985214233398438
         },
         "volunteers": [],
         "description": "опис події",
         "status": "IN_PROGRESS",
-        "createdAt": "2024-06-18T14:17:38.513258"
+        "createdAt": "2024-06-17T14:17:38.513258"
       }
     ];
 
@@ -137,7 +150,7 @@ const AnalyticsPage = () => {
     dispatch(fetchEvents(pageable));
     
     // get test events
-    //events = testEvents; 
+    // events = testEvents; 
 
     // calculate general statistic for selected date range
     let eventsInDateRange = events.filter(event => {
@@ -145,7 +158,6 @@ const AnalyticsPage = () => {
       return eventDate >= currentStartDate && eventDate <= currentEndDate;
     });  
     let totalVolunteers = []; eventsInDateRange.forEach(event => event.volunteers.forEach(volunteer => totalVolunteers.push(volunteer)));
-    console.log(eventsInDateRange)
 
     let activeEvents = eventsInDateRange.filter(event => event.status === 'IN_PROGRESS');
     let activeVolunteers = []; activeEvents.forEach(event => event.volunteers.forEach(volunteer => activeVolunteers.push(volunteer)));
