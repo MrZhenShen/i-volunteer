@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 
 import { actions } from './mapSlice';
 
-export const EventLayer = () => {
+export const EventLayer = ({ onClick }) => {
   const dispatch = useDispatch();
   const map = useMap()
 
@@ -15,6 +15,7 @@ export const EventLayer = () => {
   useMapEvents({
     click: e => {
       const { lat, lng } = e.latlng;
+      onClick && onClick({ lat, lng });
       dispatch(actions.click({ lat, lng }))
     }
   })

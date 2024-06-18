@@ -32,27 +32,29 @@ function VolunteerHeader({ volunteer }) {
 function VolunteerInfoSlideOver({ isOpen, toggle, volunteer }) {
   return (
     <SlideOver isOpen={isOpen} toggle={toggle}>
-      <div className="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl overflow-y-auto">
-        <VolunteerHeader volunteer={volunteer} />
-        <div className="px-14 py-8">
+      {volunteer && (
+        <div className="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl overflow-y-auto">
+          <VolunteerHeader volunteer={volunteer} />
+          <div className="px-14 py-8">
 
-          <VolunteerInfo volunteer={volunteer} />
+            <VolunteerInfo volunteer={volunteer} />
 
-          <div className="h-80 mb-6">
-            <Map
-              center={[volunteer.longitude, volunteer.latitude]}
-              markers={[
-                {
-                  id: volunteer.id,
-                  type: "rescuer",
-                  position: [volunteer.longitude, volunteer.latitude],
-                  selected: false,
-                },
-              ]}
-            />
+            <div className="h-80 mb-6">
+              <Map
+                center={[volunteer.longitude, volunteer.latitude]}
+                markers={[
+                  {
+                    id: volunteer.id,
+                    type: "rescuer",
+                    position: [volunteer.longitude, volunteer.latitude],
+                    selected: false,
+                  },
+                ]}
+              />
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </SlideOver>
   )
 }

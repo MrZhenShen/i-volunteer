@@ -6,7 +6,6 @@ import { Form, Formik } from "formik";
 import Pagination from "../components/Pagination";
 import Status from "../components/Status";
 import Icon from "../components/Icon";
-import VolunteerDetailsSlideOver from "../containers/slide-overs/VolunteerDetailsSlideOver";
 import { fetchVolunteers } from "../features/volunteers/thunks";
 import { VolunteerStatusDetails } from "../api/volunteer.facade";
 import VolunteerInfoSlideOver from "../features/volunteers/components/VolunteerInfoSlideOver";

@@ -7,12 +7,23 @@ import { Map } from "../components/map/Map";
 import LoadingOverlay from '../components/LoadingOverlay';
 import VolunteerInfoSlideOver from '../features/volunteers/components/VolunteerInfoSlideOver';
 import { fetchVolunteers } from "../features/volunteers/thunks";
+import { fetchEvents } from '../features/events/thunks';
+import EventInfoSlideOver from '../features/events/components/EventsInfoSlideOver';
 
 function volunteersToMarkers(volunteers) {
   return volunteers.map((volunteer) => ({
-    id: `rescuer/${volunteer.id}`,
-    type: 'rescuer', // volunteer.role,
+    id: `volunteer/${volunteer.id}`,
+    type: 'rescuer', // TODO: replace with volunteer.role when implemented
     position: [49.83002537341331, 24.06477928161621],
+    selected: false,
+  }));
+}
+
+function eventsToMarkers(events) {
+  return events.map((event) => ({
+    id: `event/${event.id}`,
+    type: 'event',
+    position: [event.address.latitude, event.address.longitude],
     selected: false,
   }));
 }
@@ -20,23 +31,45 @@ function volunteersToMarkers(volunteers) {
 export function MapPage() {
   const dispatch = useDispatch();
   const [selected, setSelected] = useState("all");
-  const [showDialog, setShowDialog] = useState(false)
+  const [selectedMarker, setSelectedMarker] = useState(null);
 
-  let markers = [];
+  const { data: volunteers, loading: volunteersLoading } =
+    useSelector((state) => state.volunteers);
 
-  const {
-    data: volunteers,
-    loading,
-  } = useSelector((state) => state.volunteers);
+  const { data: events, loading: eventsLoading } =
+    useSelector((state) => state.events);
+
+  function onMapClick({ lat, lng }) {
+    console.log('map clicked', lat, lng);
+    setSelectedMarker(null);
+  }
+
+  function onMarkerClick(marker) {
+    console.log('marker clicked', marker);
+    marker.selected = true;
+    setSelectedMarker(marker);
+  }
+
+  function isOpenType(type) {
+    if (selectedMarker === null) return false;
+    return selectedMarker.id.split('/')[0] === type
+  }
+
+  const markers = [
+    ...volunteersToMarkers(volunteers),
+    ...eventsToMarkers(events),
+  ];
 
   useEffect(() => {
-    dispatch(fetchVolunteers({
+    const pageSettings = {
       page: 1,
       size: 10,
       sortBy: "",
       sortOrder: "",
       filter: "",
-    }));
+    }
+    dispatch(fetchVolunteers(pageSettings));
+    dispatch(fetchEvents(pageSettings));
   }, [dispatch]);
 
   const filters = [
@@ -45,15 +78,11 @@ export function MapPage() {
     { label: "Поліцейські", value: "policement", icon: 'Police' },
   ];
 
-  if (volunteers.length > 0) {
-    markers = volunteersToMarkers(volunteers);
-  }
-
   return (
     <>
       <div className="pt-8 flex flex-row justify-between">
         <span className="text-lg font-bold">Мапа</span>
-        <Button variant="secondary" icon="Add" onClick={() => setShowDialog(!showDialog)}>Додати подію</Button>
+        <Button variant="secondary" icon="Add">Додати подію</Button>
       </div>
 
       <div className="pt-6">
@@ -62,13 +91,22 @@ export function MapPage() {
       </div>
 
       <div className="relative pt-4 flex-grow">
-        <Map markers={markers} />
+        <Map markers={markers} onClick={onMapClick} onMarkerClick={onMarkerClick} />
       </div>
-      {loading && <LoadingOverlay />}
+
       <VolunteerInfoSlideOver
-        volunteer={{ status: 'AVAILABLE', correlationId: "2b69deb8-4795-43f1-936a-dc1ce43ae368", firstName: "John", lastName: "Doe", address: { city: "Lviv", street: "Під Голоском", zipCode: "Ukraine" }, latitude: 24.06477928161621, longitude: 49.83002537341331 }}
-        isOpen={showDialog}
-        toggle={() => setShowDialog(!showDialog)} />
+        volunteer={volunteers.find((volunteer) => `volunteer/${volunteer.id}` === selectedMarker?.id)}
+        isOpen={isOpenType('volunteer')}
+        toggle={() => setSelectedMarker(null)}
+      />
+
+      <EventInfoSlideOver
+        event={events.find((event) => `event/${event.id}` === selectedMarker?.id)}
+        isOpen={isOpenType('event')}
+        toggle={() => setSelectedMarker(null)}
+      />
+
+      {eventsLoading && volunteersLoading && <LoadingOverlay />}
     </>
   );
 }
