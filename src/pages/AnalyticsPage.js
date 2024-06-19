@@ -4,16 +4,14 @@ import { Map } from '../components/map/Map';
 import DateRange from '../components/DateRange';
 import LoadingOverlay from '../components/LoadingOverlay';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-
 import { fetchEvents } from '../features/events/thunks';
 
 const AnalyticsPage = () => {
   const dispatch = useDispatch();
-  
-  let { data: events, loading, error } = useSelector((state) => state.events);
+  const { data: events, loading, error } = useSelector((state) => state.events);
 
   const [dateRange, setDateRange] = useState({
-    startDate: null, 
+    startDate: null,
     endDate: null
   });
   const [currentEventsCount, setCurrentEventsCount] = useState({
@@ -34,170 +32,79 @@ const AnalyticsPage = () => {
     activeVolunteers: [],
     totalVolunteers: [],
   });
-  const [pageable, setPageable] = useState({
+  const [pagable, setPagable] = useState({
     page: 1,
-    size: 100,
+    size: 1000000,
     sortBy: 'createdAt',
     sortOrder: 'desc'
   });
 
   useEffect(() => {
-
-    // get current date range
-    let currentStartDate = new Date(dateRange.startDate);
-    let currentEndDate = new Date(dateRange.endDate);
-
+    const currentStartDate = new Date(dateRange.startDate);
+    const currentEndDate = new Date(dateRange.endDate);
     const timePeriod_Millisecond = currentEndDate - currentStartDate + 1000 * 60 * 60 * 24;
 
-    // get previous date range
-    let previousStartDate = new Date(currentStartDate - timePeriod_Millisecond);
-    let previousEndDate = new Date(currentEndDate - timePeriod_Millisecond);  
+    const previousStartDate = new Date(currentStartDate - timePeriod_Millisecond);
+    const previousEndDate = new Date(currentEndDate - timePeriod_Millisecond);
 
-    let testEvents = 
-    [
-      {
-        "id": 17,
-        "eventType": "OTHER",
-        "description": "-",
-        "status": "IN_PROGRESS",
-        "createdAt": "2024-06-15",
-        "address": {
-          "latitude": 49.87118501043983,
-          "longitude": 23.985214233398438
-        },
-        "volunteers": []
-      },
-      {
-        "id": 18,
-        "eventType": "OTHER",
-        "zipCode": null,
-        "address": {
-          "id": 18,
-          "street": "вулиця",
-          "apartmentNumber": "1",
-          "buildingNumber": null,
-          "city": "Львів",
-          "state": "Львівська",
-          "zipCode": "79000",
-          "latitude": 49.87118501043983,
-          "longitude": 23.985214233398438
-        },
-        "volunteers": [
-          {
-            "id": 2,
-            "correlationId": "2b69deb8-4795-43f1-936a-dc1ce43ae368",
-            "firstName": "Ростислав",
-            "lastName": "Гриник",
-            "mobilePhone": "0639302157",
-            "address": {
-              "id": null,
-              "street": "Стрийська",
-              "apartmentNumber": null,
-              "buildingNumber": "61",
-              "city": "Львів",
-              "state": "Львівьска обл.",
-              "zipCode": "79031",
-              "latitude": 0,
-              "longitude": 0
-            },
-            "birthDate": "1990-03-15",
-            "latitude": 0,
-            "longitude": 0,
-            "status": "REQUESTED",
-            "tokens": [
-              {
-                "id": 154,
-                "token": "APA91bH3f4sOpfxYyemBOyljXelpEwD0sFpPNCkEzep3ze6l8RdaznDXl7u1hio9trVLlDE8yvNeNfRrWyL4P18aTLATkKYc8lHYUzc2zb0XfRh1QPYKG_byRljU216xQEEKkltKdcRt",
-                "expiryDateTime": "2024-07-05T19:57:20.248048"
-              }
-            ],
-            "rnokpp": "1"
-          }
-        ],
-        "description": "вода",
-        "status": "IN_PROGRESS",
-        "createdAt": "2024-06-16T14:16:27.302288"
-      },
-      {
-        "id": 19,
-        "eventType": "SEARCH_AND_RESCUE",
-        "zipCode": null,
-        "address": {
-          "id": 19,
-          "street": "вулиця",
-          "apartmentNumber": "1",
-          "buildingNumber": null,
-          "city": "Львів",
-          "state": "Львівська",
-          "zipCode": "79000",
-          "latitude": 49.87118501043983,
-          "longitude": 23.985214233398438
-        },
-        "volunteers": [],
-        "description": "опис події",
-        "status": "IN_PROGRESS",
-        "createdAt": "2024-06-17T14:17:38.513258"
-      }
-    ];
-
-    // get events
+    dispatch(fetchEvents(pagable));
     
-    // get events in previous and currents date ranges
-    // not yet implemented
-    // dispatch(fetchEvents({ startDate: previousStartDate, endDate: currentEndDate }));
 
-    // get all events
-    dispatch(fetchEvents(pageable));
-    
-    // get test events
-    // events = testEvents; 
+    const currentStats = calculateStatistics(events, dateRange);
+    setCurrentEventsCount(currentStats.eventsCount);
+    setCurrentEventsDailyCount(currentStats.dailyCounts);
 
-    // calculate general statistic for selected date range
-    let eventsInDateRange = events.filter(event => {
-      const eventDate = new Date(event.createdAt);
-      return eventDate >= currentStartDate && eventDate <= currentEndDate;
-    });  
-    let totalVolunteers = []; eventsInDateRange.forEach(event => event.volunteers.forEach(volunteer => totalVolunteers.push(volunteer)));
-
-    let activeEvents = eventsInDateRange.filter(event => event.status === 'IN_PROGRESS');
-    let activeVolunteers = []; activeEvents.forEach(event => event.volunteers.forEach(volunteer => activeVolunteers.push(volunteer)));
-    setCurrentEventsCount({ activeEvents: activeEvents.length, totalEvents: eventsInDateRange.length, activeVolunteers: new Set(activeVolunteers).size, totalVolunteers: new Set(totalVolunteers).size} );
-
-    // calculate statistic for each day for selected date range
-    setCurrentEventsDailyCount( { 
-      activeEvents: calculateCountByDays(activeEvents, dateRange, 'events'),
-      totalEvents: calculateCountByDays(eventsInDateRange, dateRange, 'events'),
-      activeVolunteers: calculateCountByDays(activeEvents, dateRange, 'volunteers'),
-      totalVolunteers: calculateCountByDays(eventsInDateRange, dateRange, 'volunteers') 
-    } );
-    
-    // calculate statistic for previuos date range
-    eventsInDateRange = events.filter(event => {
-      const eventDate = new Date(event.createdAt);
-      return eventDate >= previousStartDate && eventDate <= previousEndDate;
-    });  
-    totalVolunteers = []; eventsInDateRange.forEach(event => event.volunteers.forEach(volunteer => totalVolunteers.push(volunteer)));
-
-    activeEvents = eventsInDateRange.filter(event => event.status === 'IN_PROGRESS');
-    activeVolunteers = []; activeEvents.forEach(event => event.volunteers.forEach(volunteer => activeVolunteers.push(volunteer)));
-    setPreviousEventsCount({ activeEvents: activeEvents.length, totalEvents: eventsInDateRange.length, activeVolunteers: new Set(activeVolunteers).size, totalVolunteers: new Set(totalVolunteers).size} );
+    const previousStats = calculateStatistics(events, {
+      startDate: previousStartDate,
+      endDate: previousEndDate,
+    });
+    setPreviousEventsCount(previousStats.eventsCount);
 
   }, [dispatch, dateRange]);
 
-  // calculate statistic on events or volonteers in dateRange
-  // type = [`events`, `volunteers`]
+  const calculateStatistics = (events, dateRange) => {
+    const startDate = new Date(dateRange.startDate);
+    const endDate = new Date(dateRange.endDate);
+
+    const eventsInDateRange = events.filter(event => {
+      const eventDate = new Date(event.createdAt);
+      return eventDate >= startDate && eventDate <= endDate;
+    });
+
+    const totalVolunteers = [];
+    eventsInDateRange.forEach(event => event.volunteers.forEach(volunteer => totalVolunteers.push(volunteer)));
+
+    const activeEvents = eventsInDateRange.filter(event => event.status === 'IN_PROGRESS');
+    const activeVolunteers = [];
+    activeEvents.forEach(event => event.volunteers.forEach(volunteer => activeVolunteers.push(volunteer)));
+
+    const eventsCount = {
+      activeEvents: activeEvents.length,
+      totalEvents: eventsInDateRange.length,
+      activeVolunteers: activeVolunteers.length,
+      totalVolunteers: totalVolunteers.length
+    };
+
+    const dailyCounts = {
+      activeEvents: calculateCountByDays(activeEvents, dateRange, 'events'),
+      totalEvents: calculateCountByDays(eventsInDateRange, dateRange, 'events'),
+      activeVolunteers: calculateCountByDays(activeEvents, dateRange, 'volunteers'),
+      totalVolunteers: calculateCountByDays(eventsInDateRange, dateRange, 'volunteers')
+    };
+
+    return { eventsCount, dailyCounts };
+  };
+
   const calculateCountByDays = (items, dateRange, type) => {
     const counts = {};
     const startDate = new Date(dateRange.startDate);
     const endDate = new Date(dateRange.endDate);
-  
-    // Initialize all dates in the range with count 0
+
     for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 1)) {
       const dateString = date.toISOString().split('T')[0];
       counts[dateString] = 0;
     }
-  
-    // Count items for each date
+
     items.forEach(item => {
       const date = new Date(item.createdAt);
       if (!isNaN(date.getTime())) {
@@ -209,26 +116,21 @@ const AnalyticsPage = () => {
         }
       }
     });
-  
+
     return Object.keys(counts).map(date => ({
       date,
       count: counts[date],
     }));
   };
 
-  // handle date range changed
   const handleDateChange = (value) => {
-
     const [startDate, endDate] = value;
-  
-    // Set hours to include the entire day
     startDate.setHours(0, 0, 0, 0);
     endDate.setHours(23, 59, 59, 999);
 
     setDateRange({ startDate: startDate, endDate: endDate });
   };
-  
-  // render statistics cell and chart
+
   const renderCount = (count, previousCount, dailyCounts) => {
     const difference = count - previousCount;
     const differenceText = (difference >= 0) ? `+${difference}` : difference;
@@ -238,11 +140,7 @@ const AnalyticsPage = () => {
       <div className="flex flex-col items-start w-full">
         <div className="flex items-center">
           <span className="text-3xl font-bold text-primary-500">{count}</span>
-          {
-            <span className={`ml-2 text-sm ${differenceColor}`}>
-              {differenceText}
-            </span>
-          }
+          <span className={`ml-2 text-sm ${differenceColor}`}>{differenceText}</span>
         </div>
         <ResponsiveContainer width="80%" height={80}>
           <AreaChart data={dailyCounts}>
@@ -272,14 +170,14 @@ const AnalyticsPage = () => {
       </div>
       <div className="flex flex-grow">
         <div className="flex-grow relative z-0">
-        <Map
-            markers={events  
+          <Map
+            markers={events
               .filter(event => {
                 const eventDate = new Date(event.createdAt);
                 const currentStartDate = new Date(dateRange.startDate);
                 const currentEndDate = new Date(dateRange.endDate);
                 return eventDate >= currentStartDate && eventDate <= currentEndDate;
-              })  
+              })
               .map(event => ({
                 id: event.id,
                 type: 'event',
