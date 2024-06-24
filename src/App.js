@@ -8,6 +8,7 @@ import EventsPage from "./pages/EventsPage";
 import AnalyticsPage from "./pages/AnalyticsPage";
 import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
+import { PrivateRoute } from "./features/auth/components/PrivateRoute";
 
 function App() {
   return (
@@ -16,10 +17,38 @@ function App() {
         <Route path="/auth/sign-in" element={<SignInPage />} />
         <Route path="/auth/sign-up" element={<SignUpPage />} />
         <Route path="/" element={<Layout />}>
-          <Route path="/volunteers" element={<VolunteersPage />} />
-          <Route path="/events" element={<EventsPage />} />
-          <Route path="/map" element={<MapPage />} />
-          <Route path="/analytics" element={<AnalyticsPage />} />
+          <Route
+            path="/volunteers"
+            element={
+              <PrivateRoute>
+                <VolunteersPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/events"
+            element={
+              <PrivateRoute>
+                <EventsPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/map"
+            element={
+              <PrivateRoute>
+                <MapPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/analytics"
+            element={
+              <PrivateRoute>
+                <AnalyticsPage />
+              </PrivateRoute>
+            }
+          />
         </Route>
       </Routes>
     </BrowserRouter>
