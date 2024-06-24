@@ -1,6 +1,13 @@
 import * as thunks from "./thunks";
 
-export const reducers = {};
+export const reducers = {
+  addNewEvent: (state, action) => {
+    state.data.push(action.payload);
+  },
+  removeNewEvent: (state, action) => {
+    state.data = state.data.filter((event) => event.id !== action.payload.id);
+  }
+};
 
 export const extraReducers = (builder) => {
   builder

@@ -1,20 +1,19 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useReducer } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { Menu } from '../components/Menu';
-import Button from "../components/Button";
 import { Map } from "../components/map/Map";
 import LoadingOverlay from '../components/LoadingOverlay';
 import VolunteerInfoSlideOver from '../features/volunteers/components/VolunteerInfoSlideOver';
 import { fetchVolunteers } from "../features/volunteers/thunks";
 import { fetchEvents } from '../features/events/thunks';
 import EventInfoSlideOver from '../features/events/components/EventsInfoSlideOver';
+import EventCreateSlideOver from '../features/events/components/EventsCreateSlideOver';
 
 function volunteersToMarkers(volunteers) {
   return volunteers.map((volunteer) => ({
     id: `volunteer/${volunteer.id}`,
     type: 'rescuer', // TODO: replace with volunteer.role when implemented
-    position: [49.83002537341331, 24.06477928161621],
+    position: [volunteer.longitude, volunteer.latitude],
     selected: false,
   }));
 }
@@ -30,8 +29,20 @@ function eventsToMarkers(events) {
 
 export function MapPage() {
   const dispatch = useDispatch();
-  const [selected, setSelected] = useState("all");
   const [selectedMarker, setSelectedMarker] = useState(null);
+  const [markers, markerDispatch] = useReducer((state, action) => {
+    if (action.type === 'MARKERS/add') {
+      return [...state, action.payload];
+    }
+
+    if (action.type === 'MARKERS/remove') {
+      return state.filter((marker) => marker.id !== action.payload.id);
+    }
+
+    if (action.type === 'MARKERS/set') {
+      return action.payload;
+    }
+  }, []);
 
   const { data: volunteers, loading: volunteersLoading } =
     useSelector((state) => state.volunteers);
@@ -40,30 +51,35 @@ export function MapPage() {
     useSelector((state) => state.events);
 
   function onMapClick({ lat, lng }) {
-    console.log('map clicked', lat, lng);
-    setSelectedMarker(null);
+    const marker = {
+      id: 'event/new',
+      type: 'event',
+      position: [lat, lng],
+      selected: true,
+    }
+    markerDispatch({ type: 'MARKERS/remove', payload: { id: 'event/new' } });
+    markerDispatch({ type: 'MARKERS/add', payload: marker });
+    setSelectedMarker(marker);
   }
 
   function onMarkerClick(marker) {
-    console.log('marker clicked', marker);
     marker.selected = true;
     setSelectedMarker(marker);
   }
 
   function isOpenType(type) {
     if (selectedMarker === null) return false;
-    return selectedMarker.id.split('/')[0] === type
+    if (type === 'new' && selectedMarker.id === 'event/new') return true;
+    if (selectedMarker.id !== 'event/new') {
+      return selectedMarker.id.split('/')[0] === type
+    }
+    return false
   }
-
-  const markers = [
-    ...volunteersToMarkers(volunteers),
-    ...eventsToMarkers(events),
-  ];
 
   useEffect(() => {
     const pageSettings = {
       page: 1,
-      size: 10,
+      size: 100,
       sortBy: "",
       sortOrder: "",
       filter: "",
@@ -72,27 +88,38 @@ export function MapPage() {
     dispatch(fetchEvents(pageSettings));
   }, [dispatch]);
 
-  const filters = [
-    { label: "Всі", value: "all", icon: 'Checkmark' },
-    { label: "Медики", value: "medic", icon: 'Doctor' },
-    { label: "Поліцейські", value: "policement", icon: 'Police' },
-  ];
+  useEffect(() => {
+    const m = [
+      ...volunteersToMarkers(volunteers),
+      ...eventsToMarkers(events),
+    ];
+    markerDispatch({ type: 'MARKERS/set', payload: m });
+  }, [volunteers, events])
 
   return (
     <>
       <div className="pt-8 flex flex-row justify-between">
         <span className="text-lg font-bold">Мапа</span>
-        <Button variant="secondary" icon="Add">Додати подію</Button>
+        {/*<Button variant="secondary" icon="Add">Додати подію</Button>*/}
       </div>
 
-      <div className="pt-6">
+    {/*<div className="pt-6">
         <span>Фільтр добровольців:</span>
         <Menu selected={selected} items={filters} onSelect={setSelected} />
-      </div>
+      </div>*/}
 
       <div className="relative pt-4 flex-grow">
         <Map markers={markers} onClick={onMapClick} onMarkerClick={onMarkerClick} />
       </div>
+
+      <EventCreateSlideOver
+        position={selectedMarker?.position}
+        isOpen={isOpenType('new')}
+        toggle={() => {
+          markerDispatch({ type: 'MARKERS/remove', payload: { id: 'event/new' } });
+          setSelectedMarker(null)
+        }}
+      />
 
       <VolunteerInfoSlideOver
         volunteer={volunteers.find((volunteer) => `volunteer/${volunteer.id}` === selectedMarker?.id)}

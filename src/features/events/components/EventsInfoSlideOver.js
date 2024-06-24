@@ -1,9 +1,7 @@
 import SlideOver from "../../../components/SlideOver";
 import { InfoText, InfoStatus, InfoAddress, InfoTable } from "../../../components/info-table";
 import { EventStatusDetails, EventTypeDetails } from "../../../api/events.facade";
-import Icon from "../../../components/Icon";
-import Button from "../../../components/Button";
-import formatPhone from "../../../utils/formatPhone";
+import InvolvedVolunteers from "./InvolvedVolunteers";
 
 function EventInfo({ event }) {
   const eventTypeText = EventTypeDetails[event.eventType]?.text ?? "Невідомий тип";
@@ -27,24 +25,9 @@ function EventHeader({ event }) {
   const eventTypeName = EventTypeDetails[event.eventType]?.text ?? "Невідомий тип";
   return (
     <div className="flex flex-col bg-gradient-to-l from-[#BF4040] to-[#660000] p-14 pb-16">
-      <span className="text-2xl text-white font-bold">{eventTypeName}</span>
-      <span>{event.createdAt}</span>
+      <span className="text-2xl text-primary-0 font-bold">{eventTypeName}</span>
+      <span className="text-red-100">{event.createdAt}</span>
     </div>
-  )
-}
-
-function InvolvedVolunteer({ volunteer }) {
-  return (
-    <li className="grid grid-col-1 gap-2 pt-4">
-      <div className="flex justify-between items-center">
-        <span className="text-sm text-body-900 font-normal">{volunteer.firstName} {volunteer.lastName}</span>
-        <Button variant="destructive" size="small">Відпустити</Button>
-      </div>
-      <span className="text-xs text-body-400 font-normal">
-        <Icon name="Rescuer" className="w-6 h-6 inline mr-1" />Рятувальник
-      </span>
-      <span className="font-mediuma text-body-900 font-normal">{formatPhone(volunteer.mobilePhone)}</span>
-    </li>
   )
 }
 
@@ -58,12 +41,7 @@ function EventInfoSlideOver({ isOpen, toggle, event }) {
             <EventInfo event={event} />
           </div>
           <div className="px-14">
-            <span className="text-sm text-body-400">Залучені добровольці ({event.volunteers.length})</span>
-            <ul className="grid grid-col-1 divide-y divide-gray-200 mt-6 gap-4">
-              {event.volunteers.map((volunteer) => (
-                <InvolvedVolunteer key={volunteer.id} volunteer={volunteer} />
-              ))}
-            </ul>
+            <InvolvedVolunteers volunteers={event.volunteers} />
           </div>
         </div>
       )}
