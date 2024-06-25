@@ -1,8 +1,10 @@
 import { NavLink } from "react-router-dom";
 import Icon from "../components/Icon";
 import avatar from "../assets/avatar.png";
+import { useSelector } from "react-redux";
 
 const NavigationBar = () => {
+  const { username } = useSelector((state) => state.auth);
   const linkStyle =
     "flex items-center text-primary-400 " +
     "hover:text-gray-800 hover:no-underline " +
@@ -71,7 +73,7 @@ const NavigationBar = () => {
           <div className="flex items-center gap-2">
             <img src={avatar} alt="Avatar" className="w-10 h-10 rounded-full" />
             <span className="text-primary-400 text-base leading-6">
-              Іван Іваненко
+              {username}
             </span>
           </div>
         </div>
