@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 
 import { actions } from './mapSlice';
 
-export const EventLayer = ({ onClick }) => {
+export const EventLayer = ({ onClick, onZoomEnd }) => {
   const dispatch = useDispatch();
   const map = useMap()
 
@@ -17,6 +17,10 @@ export const EventLayer = ({ onClick }) => {
       const { lat, lng } = e.latlng;
       onClick && onClick({ lat, lng });
       dispatch(actions.click({ lat, lng }))
+    },
+    zoomend: () => {
+      const zoom = map.getZoom();
+      onZoomEnd && onZoomEnd(zoom);
     }
   })
 
