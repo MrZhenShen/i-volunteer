@@ -1,19 +1,18 @@
-import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-
-import { history } from '../../../utils/history';
+import { useEffect } from 'react';
 
 export { PrivateRoute };
 
 function PrivateRoute({ children }) {
-    const { data: authUser } = useSelector(x => x.auth);
-    
-    if (!authUser) {
-        // not logged in so redirect to login page with the return url
-        return <Navigate to="/auth/sign-in" state={{ from: history.location }} />
-    }
+  const navigate = useNavigate();
+  const { token } = useSelector(x => x.auth);
 
-    // authorized so return child components
-    return children;
+  useEffect(() => {
+    if (!token) {
+      navigate('/auth/sign-in');
+    }
+  }, [token, navigate]);
+
+  return children;
 }

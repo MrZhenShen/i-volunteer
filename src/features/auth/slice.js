@@ -4,8 +4,10 @@ import { reducers, extraReducers } from './reducers';
 
 const initialState = {
   loading: false,
-  user: null,
-  error: null
+  username: null,
+  token: null,
+  role: null,
+  error: null,
 };
 
 export const authSlice = createSlice({
