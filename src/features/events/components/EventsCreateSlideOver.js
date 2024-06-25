@@ -75,7 +75,7 @@ function EventForm({ onSubmit, geo }) {
     }];
   }, []);
 
-  const isCoordsDefined = (values) => values.latitude === 0 && values.longitude === 0;
+  const isCoordsDefined = (values) => values.latitude !== 0 && values.longitude !== 0;
 
   return (
     <Formik
