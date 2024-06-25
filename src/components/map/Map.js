@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { MapContainer, TileLayer } from 'react-leaflet';
 
 import { EventMarker, MedicMarker, PolicemanMarker, RescuerMarker } from './markers';
@@ -20,30 +20,61 @@ export const Map = ({
   onClick,
 }) => {
   const defaultCenter = [49.84108232367849, 24.030532836914066];
-  const defaultZoom = 11;
+  const [mapZoom, setZoom] = useState(zoom ?? 11);
+
+  function handleZoomChange(newZoom) {
+    setZoom(newZoom);
+  }
 
   return (
     <MapContainer
       center={center ?? defaultCenter}
-      zoom={zoom ?? defaultZoom}
+      zoom={zoom ?? 11}
       scrollWheelZoom={true}
       className="h-full">
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <EventLayer onMarkerClick={onMarkerClick} onClick={onClick} />
+      <EventLayer onMarkerClick={onMarkerClick} onClick={onClick} onZoomEnd={handleZoomChange} />
       {
         (markers ?? []).map(({ id, type, position, selected }) => {
           switch (type) {
             case 'event':
-              return <EventMarker key={`${type}/${id}`} onClick={onMarkerClick} id={id} position={position} selected={selected} />
+              return <EventMarker
+                key={`${type}/${id}`}
+                onClick={onMarkerClick}
+                id={id}
+                position={position}
+                selected={selected}
+              />
             case 'medic':
-              return <MedicMarker key={`${type}/${id}`} onClick={onMarkerClick} id={id} position={position} selected={selected} />
+              return <MedicMarker
+                key={`${type}/${id}`}
+                onClick={onMarkerClick}
+                id={id}
+                position={position}
+                selected={selected}
+                zoom={mapZoom}
+              />
             case 'policeman':
-              return <PolicemanMarker key={`${type}/${id}`} onClick={onMarkerClick} id={id} position={position} selected={selected} />
+              return <PolicemanMarker
+                key={`${type}/${id}`}
+                onClick={onMarkerClick}
+                id={id}
+                position={position}
+                selected={selected}
+                zoom={mapZoom}
+              />
             case 'rescuer':
-              return <RescuerMarker key={`${type}/${id}`} onClick={onMarkerClick} id={id} position={position} selected={selected} />
+              return <RescuerMarker
+                key={`${type}/${id}`}
+                onClick={onMarkerClick}
+                id={id}
+                position={position}
+                selected={selected}
+                zoom={mapZoom}
+              />
             default:
               return null
           }
