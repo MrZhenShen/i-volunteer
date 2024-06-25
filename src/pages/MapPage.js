@@ -42,6 +42,24 @@ export function MapPage() {
     if (action.type === 'MARKERS/set') {
       return action.payload;
     }
+
+    if (action.type === 'MARKERS/select') {
+      return state.map((marker) => {
+        if (marker.id === action.payload.id) {
+          return { ...marker, selected: true };
+        }
+        return { ...marker, selected: false };
+      });
+    }
+
+    if (action.type === 'MARKERS/unselect') {
+      return state.map((marker) => {
+        if (marker.id === action.payload.id) {
+          return { ...marker, selected: false };
+        }
+        return marker;
+      });
+    }
   }, []);
 
   const { data: volunteers, loading: volunteersLoading } =
@@ -64,6 +82,7 @@ export function MapPage() {
 
   function onMarkerClick(marker) {
     marker.selected = true;
+    markerDispatch({ type: 'MARKERS/select', payload: marker });
     setSelectedMarker(marker);
   }
 
@@ -124,13 +143,19 @@ export function MapPage() {
       <VolunteerInfoSlideOver
         volunteer={volunteers.find((volunteer) => `volunteer/${volunteer.id}` === selectedMarker?.id)}
         isOpen={isOpenType('volunteer')}
-        toggle={() => setSelectedMarker(null)}
+        toggle={() => {
+          markerDispatch({ type: 'MARKERS/unselect', payload: selectedMarker });
+          setSelectedMarker(null)
+        }}
       />
 
       <EventInfoSlideOver
         event={events.find((event) => `event/${event.id}` === selectedMarker?.id)}
         isOpen={isOpenType('event')}
-        toggle={() => setSelectedMarker(null)}
+        toggle={() => {
+          markerDispatch({ type: 'MARKERS/unselect', payload: selectedMarker });
+          setSelectedMarker(null)
+        }}
       />
 
       {eventsLoading && volunteersLoading && <LoadingOverlay />}
