@@ -16,38 +16,29 @@ function App() {
       <Routes>
         <Route path="/auth/sign-in" element={<SignInPage />} />
         <Route path="/auth/sign-up" element={<SignUpPage />} />
-        <Route path="/" element={<Layout />}>
+        <Route
+          path="/"
+          element={
+            <PrivateRoute>
+              <Layout />
+            </PrivateRoute>
+          }
+        >
           <Route
             path="/volunteers"
-            element={
-              <PrivateRoute>
-                <VolunteersPage />
-              </PrivateRoute>
-            }
+            element={<VolunteersPage />}
           />
           <Route
             path="/events"
-            element={
-              <PrivateRoute>
-                <EventsPage />
-              </PrivateRoute>
-            }
+            element={<EventsPage />}
           />
           <Route
             path="/map"
-            element={
-              <PrivateRoute>
-                <MapPage />
-              </PrivateRoute>
-            }
+            element={<MapPage />}
           />
           <Route
             path="/analytics"
-            element={
-              <PrivateRoute>
-                <AnalyticsPage />
-              </PrivateRoute>
-            }
+            element={<AnalyticsPage />}
           />
         </Route>
       </Routes>
