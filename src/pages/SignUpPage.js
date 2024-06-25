@@ -1,11 +1,17 @@
 import React from "react";
-import { Formik, Form } from "formik";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { Formik } from "formik";
 import * as Yup from "yup";
+
 import Input from "../components/Input";
 import Button from "../components/Button";
-import { useNavigate } from "react-router-dom";
+import { register } from '../features/auth/thunks';
+import LoadingOverlay from "../components/LoadingOverlay";
+
 
 const SignUpPage = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const initialValues = {
@@ -28,11 +34,10 @@ const SignUpPage = () => {
       .required("Пароль є обов'язковим"),
   });
 
-  const onSubmit = (values, { setSubmitting }) => {
+  const onSubmit = async (values, { setSubmitting }) => {
     try {
-      // TODO: Handle sign up submittion
-      console.log("Sign Up handled");
-      console.log(values);
+      await dispatch(register(values)).unwrap();
+      navigate("/auth/sign-in");
     } catch (error) {
       console.error("Failed to create event:", error);
     } finally {
@@ -57,8 +62,8 @@ const SignUpPage = () => {
           validationSchema={validationSchema}
           onSubmit={onSubmit}
         >
-          {({ errors, touched }) => (
-            <Form>
+          {({ errors, touched, handleSubmit, isSubmitting }) => (
+            <form onSubmit={handleSubmit}>
               <div className="mb-4">
                 <Input
                   label="Логін"
@@ -90,12 +95,14 @@ const SignUpPage = () => {
                 />
               </div>
               <div className="flex items-center justify-between">
-                <Button type="submit">Зареєструватись</Button>
+                <Button type="submit" disabled={isSubmitting}>Зареєструватись</Button>
                 <Button size="small" variant="link" onClick={handleSignInClick}>
                   Увійти в систему
                 </Button>
               </div>
-            </Form>
+
+              {isSubmitting && <LoadingOverlay />}
+            </form>
           )}
         </Formik>
       </div>
