@@ -1,12 +1,19 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
+
 import Input from "../components/Input";
 import Button from "../components/Button";
-import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from '../features/auth/thunks';
+import LoadingOverlay from "../components/LoadingOverlay";
 
 const SignInPage = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const auth = useSelector(state => state.auth);
 
   const initialValues = {
     username: "",
@@ -20,11 +27,10 @@ const SignInPage = () => {
       .required("Пароль є обов'язковим"),
   });
 
-  const onSubmit = (values, { setSubmitting }) => {
+  const onSubmit = async (values, { setSubmitting }) => {
     try {
-      // TODO: Handle sign in submittion
-      console.log("Sign In handled");
-      console.log(values);
+      await dispatch(login(values)).unwrap();
+      navigate("/map")
     } catch (error) {
       console.error("Failed to create event:", error);
     } finally {
@@ -49,7 +55,7 @@ const SignInPage = () => {
           validationSchema={validationSchema}
           onSubmit={onSubmit}
         >
-          {({ errors, touched }) => (
+          {({ errors, touched, isSubmitting }) => (
             <Form>
               <div className="mb-4">
                 <Input
@@ -58,6 +64,7 @@ const SignInPage = () => {
                   footnote={errorValue(touched.username, errors.username)}
                 />
               </div>
+
               <div className="mb-4">
                 <Input
                   label="Пароль"
@@ -66,12 +73,21 @@ const SignInPage = () => {
                   footnote={errorValue(touched.password, errors.password)}
                 />
               </div>
+
+              {auth.error && (
+                <div className="mb-4">
+                  <span className="text-red-500 text-sm">Невірний логін або пароль</span>
+                </div>
+              )}
+            
               <div className="flex items-center justify-between">
                 <Button type="submit">Увійти</Button>
                 <Button size="small" variant="link" onClick={handleSignUpClick}>
                   Створити профіль
                 </Button>
               </div>
+
+              {isSubmitting && <LoadingOverlay />}
             </Form>
           )}
         </Formik>
