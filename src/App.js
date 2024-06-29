@@ -1,24 +1,48 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import { Layout } from "./layouts/Layout";
+
+import { MapPage } from "./pages/MapPage";
+import VolunteersPage from "./pages/VolunteersPage";
+import EventsPage from "./pages/EventsPage";
+import AnalyticsPage from "./pages/AnalyticsPage";
+import SignInPage from "./pages/SignInPage";
+import SignUpPage from "./pages/SignUpPage";
+import { PrivateRoute } from "./features/auth/components/PrivateRoute";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <BrowserRouter>
+      <Routes>
+        <Route path="/auth/sign-in" element={<SignInPage />} />
+        <Route path="/auth/sign-up" element={<SignUpPage />} />
+        <Route
+          path="/"
+          element={
+            <PrivateRoute>
+              <Layout />
+            </PrivateRoute>
+          }
         >
-          Learn React
-        </a>
-      </header>
-    </div>
+          <Route
+            path="/volunteers"
+            element={<VolunteersPage />}
+          />
+          <Route
+            path="/events"
+            element={<EventsPage />}
+          />
+          <Route
+            path="/map"
+            element={<MapPage />}
+          />
+          <Route
+            path="/analytics"
+            element={<AnalyticsPage />}
+          />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
